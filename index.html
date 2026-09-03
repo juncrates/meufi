@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F2F2F7">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Carteira">
+<meta name="format-detection" content="telephone=no">
+<title>Carteira</title>
+<style>
+/* ============ Tokens — linguagem visual iOS, identidade verde-financeira ============ */
+:root{
+  --bg:#F2F2F7; --card:#FFFFFF; --label:#1C1C1E; --sec:#6E6E73; --ter:#AEAEB2;
+  --hair:rgba(60,60,67,.13); --fill:rgba(120,120,128,.14);
+  --tint:#0E7C5C; --tint-bg:rgba(14,124,92,.11);
+  --red:#D92B22; --red-bg:rgba(255,59,48,.11);
+  --amber:#B25F00; --amber-bg:rgba(255,149,0,.13);
+  --nav:rgba(248,248,250,.86); --pri-txt:#fff;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#000; --card:#1C1C1E; --label:#F2F2F7; --sec:#98989E; --ter:#636366;
+    --hair:rgba(84,84,88,.6); --fill:rgba(120,120,128,.24);
+    --tint:#30C48E; --tint-bg:rgba(48,196,142,.15);
+    --red:#FF453A; --red-bg:rgba(255,69,58,.18);
+    --amber:#FF9F0A; --amber-bg:rgba(255,159,10,.18);
+    --nav:rgba(22,22,25,.82); --pri-txt:#06281C;
+  }
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,sans-serif;
+  background:var(--bg);color:var(--label);font-size:16px;position:fixed;inset:0;width:100%;
+  overflow:hidden;-webkit-font-smoothing:antialiased;user-select:none;-webkit-user-select:none;touch-action:manipulation;
+}
+input,select{user-select:text;-webkit-user-select:text;font-family:inherit}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--tint);outline-offset:2px}
+.ic{display:block;flex:0 0 auto}
+
+/* ============ Estrutura de telas ============ */
+#views{position:absolute;inset:0}
+.view{position:absolute;inset:0;display:none}
+.view.on{display:block}
+.navbar{
+  position:absolute;top:0;left:0;right:0;z-index:5;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+  padding-top:max(6px,env(safe-area-inset-top));height:calc(44px + max(6px,env(safe-area-inset-top)));
+  transition:background .2s,box-shadow .2s;
+}
+.navbar.lif{background:var(--nav);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);box-shadow:0 .5px 0 var(--hair)}
+.nb-t{font-size:17px;font-weight:600;opacity:0;transition:opacity .18s;white-space:nowrap}
+.navbar.lif .nb-t{opacity:1}
+.nb-l{display:flex;justify-content:flex-start}
+.nb-r{display:flex;justify-content:flex-end}
+.nb-btn{display:flex;align-items:center;gap:2px;background:none;border:0;color:var(--tint);font-size:17px;font-weight:500;height:44px;padding:0 10px;letter-spacing:-.2px}
+.nb-btn:active{opacity:.5}
+.nb-ic{display:flex;align-items:center;justify-content:center;width:38px;height:38px;background:none;border:0;color:var(--tint)}
+.nb-ic:active{opacity:.5}
+.scroll{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 16px 130px;scrollbar-width:none;overscroll-behavior:none}
+.scroll::-webkit-scrollbar{display:none}
+.page{min-height:100%}
+h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padding:0 4px}
+.sub{font-size:15px;color:var(--sec);padding:0 4px;margin-bottom:14px}
+.sec-h{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:600;color:var(--sec);padding:22px 16px 8px;letter-spacing:.01em}
+.lnk{background:none;border:0;color:var(--tint);font-size:13.5px;font-weight:600;padding:4px 0}
+.foot{text-align:center;color:var(--ter);font-size:11.5px;padding:10px 0 24px}
+
+/* ============ Cards / linhas (listas agrupadas inset) ============ */
+.card{background:var(--card);border-radius:14px;overflow:hidden;margin-bottom:14px;box-shadow:0 0 0 .5px var(--hair)}
+@media (prefers-color-scheme: light){.card{box-shadow:0 0 0 .5px var(--hair),0 1px 2px rgba(0,0,0,.05)}}
+.row{display:flex;align-items:center;gap:12px;padding:12px 16px;min-height:46px;position:relative}
+.row+.row{border-top:.5px solid var(--hair)}
+.press{cursor:pointer}
+.press:active{background:rgba(120,120,128,.1)}
+.grow{flex:1;min-width:0}
+.t{font-size:16px;font-weight:550;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s{font-size:13px;color:var(--sec);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.35}
+.val{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.2px;text-align:right;white-space:nowrap}
+.val.sm{font-size:14.5px}
+.red{color:var(--red)}
+.tint{color:var(--tint)}
+.rcol{flex:0 0 auto}
+.chev{color:var(--ter);display:flex}
+.icb{width:34px;height:34px;border-radius:9px;background:var(--tint-bg);color:var(--tint);display:flex;align-items:center;justify-content:center;flex:0 0 34px}
+.dot{width:10px;height:10px;border-radius:99px;flex:0 0 10px}
+.kv{display:flex;justify-content:space-between;gap:16px;padding:11.5px 16px}
+.kv+.kv{border-top:.5px solid var(--hair)}
+.kv .k{font-size:13.5px;color:var(--sec);flex:0 0 auto;max-width:46%}
+.kv .v{font-size:14.5px;font-weight:500;text-align:right;word-break:break-word}
+
+/* hero / blocos de destaque */
+.hero{padding:18px 16px 16px}
+.lbl{font-size:13px;color:var(--sec)}
+.big{font-size:34px;font-weight:800;letter-spacing:-.8px;font-variant-numeric:tabular-nums;margin:4px 0 2px}
+.big.sm{font-size:26px;letter-spacing:-.5px}
+.finv{padding:14px 16px 8px}
+.limb{padding:18px 16px 6px}
+.invc{padding:16px 16px 12px}
+
+/* ticks do financiamento (48 marcas) */
+.ticks{display:flex;gap:2.5px;padding:14px 16px 8px;flex-wrap:wrap}
+.tick{flex:1 0 3px;height:14px;border-radius:3.5px;background:var(--fill)}
+.tick.p{background:var(--tint)}
+.tick.a{background:var(--amber)}
+.tick.l{background:var(--red)}
+.tlegend{display:flex;gap:16px;padding:0 16px 12px;font-size:12px;color:var(--sec)}
+
+/* grades de estatísticas / barras */
+.krow{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;padding:4px 16px 16px}
+.krow .k{font-size:11.5px;color:var(--sec)}
+.krow .v{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;margin-top:2px;white-space:nowrap;letter-spacing:-.2px}
+.bar{height:7px;border-radius:4px;background:var(--fill);overflow:hidden;margin:8px 16px}
+.bar i{display:block;height:100%;border-radius:4px;background:var(--tint);transition:width .5s cubic-bezier(.32,.72,0,1)}
+.bar.warn i{background:var(--amber)}
+.bar.bad i{background:var(--red)}
+.lrow{display:flex;justify-content:space-between;padding:0 16px 14px;font-size:13px;color:var(--sec)}
+.lrow b{font-weight:600;color:var(--label);font-variant-numeric:tabular-nums}
+
+/* pills */
+.pill{font-size:12px;font-weight:600;padding:3.5px 9px;border-radius:99px;white-space:nowrap;flex:0 0 auto}
+.pill.tint{color:var(--tint);background:var(--tint-bg)}
+.pill.red{color:var(--red);background:var(--red-bg)}
+.pill.amb{color:var(--amber);background:var(--amber-bg)}
+.pill.gr{color:var(--sec);background:var(--fill)}
+
+/* botões */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:50px;border-radius:13px;font-size:17px;font-weight:600;border:0;width:100%;transition:transform .15s}
+.btn:active{transform:scale(.97)}
+.btn.pri{background:var(--tint);color:var(--pri-txt)}
+.btn.quiet{background:var(--tint-bg);color:var(--tint)}
+.btn.dang{background:var(--red-bg);color:var(--red)}
+.btns{display:flex;flex-direction:column;gap:10px;margin:14px 0 6px}
+.pad{padding:12px 16px 16px}
+.note{font-size:12.5px;color:var(--sec);line-height:1.5;padding:6px 18px 16px}
+.note.in{padding:4px 16px 14px}
+
+/* formulários (planilha iOS) */
+.field{display:flex;align-items:center;min-height:50px;padding:8px 16px;gap:12px}
+.field+.field{border-top:.5px solid var(--hair)}
+.field label{flex:1;font-size:15.5px}
+.field input{background:none;border:0;outline:0;text-align:right;font-size:16.5px;font-weight:500;color:var(--tint);min-width:0;font-variant-numeric:tabular-nums;width:52%}
+.field input::placeholder{color:var(--ter);font-weight:400}
+.field input[type=number]::-webkit-inner-spin-button,.field input[type=number]::-webkit-outer-spin-button{display:none}
+.field select{background:none;border:0;outline:0;color:var(--tint);font-size:16px;font-weight:600;text-align:right;max-width:55%;-webkit-appearance:none;appearance:none}
+.stepper{display:flex;align-items:center;background:var(--fill);border-radius:9px;overflow:hidden;flex:0 0 auto}
+.stepper button{width:38px;height:32px;border:0;background:none;font-size:19px;color:var(--tint);font-weight:500}
+.stepper .num{min-width:36px;text-align:center;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}
+.dotrow{display:flex;gap:12px;padding:14px 16px}
+.cdot{width:30px;height:30px;border-radius:99px;border:0;position:relative}
+.cdot.on::after{content:'';position:absolute;inset:-5px;border-radius:99px;border:2px solid var(--label)}
+
+/* linha do tempo (próximos 30 dias) */
+.tl-date{width:44px;text-align:center;flex:0 0 44px}
+.tl-date .d{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+.tl-date .m{font-size:10.5px;color:var(--sec);text-transform:uppercase;letter-spacing:.05em}
+.tl-dot{width:8px;height:8px;border-radius:99px;background:var(--tint);flex:0 0 8px}
+.tl-dot.red{background:var(--red)}
+.tl-dot.amb{background:var(--amber)}
+.tl-dot.gr{background:var(--ter)}
+
+/* swipe-para-excluir */
+.swipe-row{position:relative;overflow:hidden}
+.sw-a{position:absolute;top:0;bottom:0;right:0;width:80px;display:flex}
+.sw-del{flex:1;background:var(--red);color:#fff;display:flex;flex-direction:column;gap:3px;align-items:center;justify-content:center;font-size:11px;font-weight:600;border:0}
+.sw-c{position:relative;background:var(--card);touch-action:pan-y;cursor:pointer}
+.sw-c:active{background:rgba(120,120,128,.08)}
+.swipe-row+.swipe-row .sw-c{border-top:.5px solid var(--hair)}
+.swipe-row .sw-c{transition:transform .32s cubic-bezier(.32,.72,0,1)}
+
+/* estados vazios */
+.empty{display:flex;flex-direction:column;align-items:center;gap:8px;padding:48px 24px;color:var(--sec)}
+.empty.sm{padding:32px 24px}
+.empty .ic{color:var(--ter)}
+.empty .t{font-size:17px;font-weight:600;color:var(--label)}
+.empty .s{font-size:13.5px;text-align:center;line-height:1.45}
+
+/* ============ Tab bar ============ */
+#tabbar{position:absolute;bottom:0;left:0;right:0;z-index:50;display:grid;grid-template-columns:repeat(4,1fr);
+  background:var(--nav);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);
+  box-shadow:0 -.5px 0 var(--hair);padding:5px 0 max(6px,env(safe-area-inset-bottom))}
+.tab{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--sec);font-size:10.5px;font-weight:500;padding:3px 0;position:relative;letter-spacing:.01em}
+.tab.on{color:var(--tint)}
+.bdg{position:absolute;top:1px;left:calc(50% + 9px);min-width:16px;height:16px;border-radius:8px;background:var(--red);color:#fff;font-size:10px;font-weight:700;display:none;align-items:center;justify-content:center;padding:0 4px;font-style:normal}
+.bdg:not(:empty){display:flex}
+
+/* ============ Navegação empilhada (push) ============ */
+#stack{position:absolute;inset:0;z-index:100;pointer-events:none}
+.push{position:absolute;inset:0;background:var(--bg);transform:translateX(100%);transition:transform .42s cubic-bezier(.32,.72,0,1);pointer-events:auto;display:flex;flex-direction:column}
+.push.in{transform:translateX(0)}
+.push .navbar{position:relative;flex:0 0 auto;background:var(--nav);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);box-shadow:0 .5px 0 var(--hair);padding-left:4px}
+.push .navbar .nb-t{opacity:1}
+.push .scroll{position:relative;flex:1;padding-top:4px}
+
+/* ============ Bottom sheet ============ */
+#sheet-root{position:fixed;inset:0;z-index:200;pointer-events:none}
+#sheet-root.show{pointer-events:auto}
+#sheet-root .bk{position:absolute;inset:0;background:rgba(0,0,0,.4);opacity:0;transition:opacity .32s}
+#sheet-root.show .bk{opacity:1}
+#sheet-root .sheet{position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-radius:13px 13px 0 0;max-height:calc(100% - 56px);display:flex;flex-direction:column;transform:translateY(105%);transition:transform .46s cubic-bezier(.32,.72,0,1);box-shadow:0 -1px 0 var(--hair)}
+#sheet-root.show .sheet{transform:translateY(0)}
+.grip{width:38px;height:5px;border-radius:3px;background:var(--fill);margin:8px auto 2px;flex:0 0 auto;touch-action:none;cursor:grab;align-self:center;padding:8px 0;background-clip:content-box}
+.sheet-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 16px calc(18px + env(safe-area-inset-bottom))}
+.sh-head{display:flex;align-items:center;justify-content:space-between;padding:8px 4px 12px}
+.sh-title{font-size:20px;font-weight:700;letter-spacing:-.4px}
+.sh-x{width:30px;height:30px;border-radius:99px;background:var(--fill);display:flex;align-items:center;justify-content:center;border:0;color:var(--sec)}
+.sh-x:active{opacity:.5}
+
+/* ============ Alerta (central) e action sheet ============ */
+#alert-root{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;padding:24px}
+#alert-root.show{display:flex}
+#alert-root .bk{position:absolute;inset:0;background:rgba(0,0,0,.3);opacity:0;transition:opacity .22s}
+#alert-root.on .bk{opacity:1}
+.al{position:relative;width:min(280px,84vw);background:var(--nav);backdrop-filter:blur(28px) saturate(170%);-webkit-backdrop-filter:blur(28px) saturate(170%);border-radius:15px;overflow:hidden;text-align:center;transform:scale(1.14);opacity:0;transition:transform .3s cubic-bezier(.2,1.1,.3,1),opacity .2s}
+#alert-root.on .al{transform:scale(1);opacity:1}
+.al .ttl{font-size:16.5px;font-weight:700;padding:18px 18px 6px;letter-spacing:-.2px}
+.al .msg{font-size:13.5px;color:var(--sec);padding:2px 18px 16px;line-height:1.45}
+.al .btns{display:flex;border-top:.5px solid var(--hair)}
+.al .btns button{flex:1;height:46px;border:0;background:none;font-size:16.5px;color:var(--tint);font-weight:500}
+.al .btns button+button{border-left:.5px solid var(--hair)}
+.al .btns button:first-child{font-weight:700;color:var(--label)}
+.al .btns button.ok.d{color:var(--red);font-weight:600}
+#as-root{position:fixed;inset:0;z-index:260;pointer-events:none}
+#as-root.show{pointer-events:auto}
+#as-root .as-bk{position:absolute;inset:0;background:rgba(0,0,0,.32);opacity:0;transition:opacity .3s}
+#as-root.show .as-bk{opacity:1}
+#as-root .as-wrap{position:absolute;bottom:0;left:8px;right:8px;padding-bottom:calc(8px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px;transform:translateY(110%);transition:transform .42s cubic-bezier(.32,.72,0,1)}
+#as-root.show .as-wrap{transform:none}
+.as-card{background:var(--nav);backdrop-filter:blur(24px) saturate(170%);-webkit-backdrop-filter:blur(24px) saturate(170%);border-radius:14px;overflow:hidden}
+.as-t{padding:13px 16px 11px;text-align:center;font-size:13px;color:var(--sec)}
+.as-b{display:block;width:100%;min-height:54px;border:0;background:none;font-size:17px;color:var(--tint);border-top:.5px solid var(--hair)}
+.as-b:first-of-type{border-top:0}
+.as-b.d{color:var(--red)}
+.as-b.c{font-weight:700;color:var(--label)}
+
+/* ============ Toast ============ */
+#toast-root{position:fixed;top:calc(max(6px,env(safe-area-inset-top)) + 56px);left:0;right:0;display:flex;justify-content:center;z-index:400;pointer-events:none}
+.toast{background:rgba(24,24,28,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#fff;border-radius:99px;padding:10px 18px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:9px;opacity:0;transform:translateY(-14px) scale(.94);transition:.34s cubic-bezier(.2,1,.3,1);box-shadow:0 8px 24px rgba(0,0,0,.28);max-width:86vw}
+.toast.in{opacity:1;transform:none}
+.toast .ic{color:#4CD493}
+.toast.err .ic{color:#FF6B62}
+
+/* passos de instalação */
+.step{display:flex;gap:12px;padding:12px 16px;align-items:flex-start}
+.step+.step{border-top:.5px solid var(--hair)}
+.step .n{width:22px;height:22px;border-radius:99px;background:var(--tint-bg);color:var(--tint);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex:0 0 22px;margin-top:1px}
+.step p{font-size:14px;line-height:1.45}
+.mini-del{width:38px;height:38px;border:0;background:none;color:var(--red);display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body>
+
+<div id="views">
+  <section class="view on" id="view-home">
+    <header class="navbar" id="nav-home"><div class="nb-l"></div><div class="nb-t">Carteira</div><div class="nb-r"></div></header>
+    <div class="scroll" id="scroll-home"><div class="page" id="page-home"></div></div>
+  </section>
+  <section class="view" id="view-fin">
+    <header class="navbar" id="nav-fin"><div class="nb-l"></div><div class="nb-t">Financiamento</div><div class="nb-r"></div></header>
+    <div class="scroll" id="scroll-fin"><div class="page" id="page-fin"></div></div>
+  </section>
+  <section class="view" id="view-cards">
+    <header class="navbar" id="nav-cards"><div class="nb-l"></div><div class="nb-t">Cartões</div>
+      <div class="nb-r"><button class="nb-ic" data-act="new-card" aria-label="Novo cartão"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>
+    </header>
+    <div class="scroll" id="scroll-cards"><div class="page" id="page-cards"></div></div>
+  </section>
+  <section class="view" id="view-set">
+    <header class="navbar" id="nav-set"><div class="nb-l"></div><div class="nb-t">Ajustes</div><div class="nb-r"></div></header>
+    <div class="scroll" id="scroll-set"><div class="page" id="page-set"></div></div>
+  </section>
+</div>
+
+<div id="stack"></div>
+
+<nav id="tabbar">
+  <button class="tab on" data-act="tab" data-tab="home"><svg class="ic" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.4 12 3.6l8.5 6.8"/><path d="M5.8 9.6v10.9h12.4V9.6"/><path d="M10 20.5v-5.4h4v5.4"/></svg><span>Início</span><i class="bdg" id="bdg-home"></i></button>
+  <button class="tab" data-act="tab" data-tab="fin"><svg class="ic" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.1 11.6 6.6 7.4A2 2 0 0 1 8.5 6h7a2 2 0 0 1 1.9 1.4l1.5 4.2"/><rect x="3.1" y="11.6" width="17.8" height="6" rx="2.3"/><path d="M7.3 14.6h1.6M15.1 14.6h1.6"/></svg><span>Financiamento</span><i class="bdg" id="bdg-fin"></i></button>
+  <button class="tab" data-act="tab" data-tab="cards"><svg class="ic" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.7" y="5.2" width="18.6" height="13.6" rx="3"/><path d="M2.7 9.7h18.6"/><path d="M6.3 15.3h4.4"/></svg><span>Cartões</span><i class="bdg" id="bdg-cards"></i></button>
+  <button class="tab" data-act="tab" data-tab="set"><svg class="ic" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h7.4"/><circle cx="15.6" cy="8" r="2.6"/><path d="M18.6 8H21"/><path d="M3 16h4.4"/><circle cx="11.6" cy="16" r="2.6"/><path d="M14.6 16H21"/></svg><span>Ajustes</span><i class="bdg" id="bdg-set"></i></button>
+</nav>
+
+<div id="sheet-root"></div>
+<div id="as-root"></div>
+<div id="alert-root"></div>
+<div id="toast-root"></div>
+<input type="file" id="importFile" accept="application/json,.json" hidden>
+
+<script>
+'use strict';
+/* =====================================================================
+   CARTEIRA — PWA offline (financiamento + cartões de crédito)
+   Tudo local: estado em localStorage, sem nenhuma requisição de rede.
+===================================================================== */
+
+/* ---------- utilidades ---------- */
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const pad = n => String(n).padStart(2,'0');
+const ymd = d => d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const todayStr = () => ymd(new Date());
+const pD  = s => { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); };
+const r2  = v => Math.round(v*100)/100;
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc = s => String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const fmtV = v => (v==null||isNaN(v)) ? '—' : Number(v).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const fmtIn = v => (v==null||v==='') ? '' : Number(v).toFixed(2).replace('.',',');
+const MONTHS=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+const MON=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const fmtDate = s => { const d=pD(s); return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear(); };
+const daysTo = s => Math.round((pD(s)-pD(todayStr()))/864e5);
+const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
+const fmtDateLong = () => cap(new Intl.DateTimeFormat('pt-BR',{weekday:'long',day:'numeric',month:'long'}).format(new Date()));
+function relDue(s){ const n=daysTo(s); if(n===0)return 'vence hoje'; if(n===1)return 'vence amanhã'; if(n>1)return 'em '+n+' dias'; if(n===-1)return 'ontem'; return 'há '+(-n)+' dias'; }
+function parseMoney(s){ s=String(s??'').trim().replace(/[^\d,.-]/g,''); if(!s) return null; if(s.includes(',')) s=s.replace(/\./g,'').replace(',','.'); const v=parseFloat(s); return isNaN(v)?null:r2(v); }
+
+/* ---------- ícones (SVG traçado, estilo SF Symbols) ---------- */
+const ICONS={
+  home:'<path d="M3.5 10.4 12 3.6l8.5 6.8"/><path d="M5.8 9.6v10.9h12.4V9.6"/><path d="M10 20.5v-5.4h4v5.4"/>',
+  car:'<path d="M5.1 11.6 6.6 7.4A2 2 0 0 1 8.5 6h7a2 2 0 0 1 1.9 1.4l1.5 4.2"/><rect x="3.1" y="11.6" width="17.8" height="6" rx="2.3"/><path d="M7.3 14.6h1.6M15.1 14.6h1.6"/>',
+  card:'<rect x="2.7" y="5.2" width="18.6" height="13.6" rx="3"/><path d="M2.7 9.7h18.6"/><path d="M6.3 15.3h4.4"/>',
+  wallet:'<path d="M4 8.5V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1.5"/><rect x="4" y="8.5" width="16" height="10.5" rx="2.5"/><circle cx="15.8" cy="13.8" r="1.3"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  back:'<path d="M15 5l-7 7 7 7"/>',
+  chev:'<path d="M9 6l6 6-6 6"/>',
+  check:'<path d="M4.5 12.5l5 5L19.5 7"/>',
+  x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  trash:'<path d="M4 7h16"/><path d="M9 7V5h6v2"/><path d="M6.5 7l1 13h9l1-13"/>',
+  share:'<path d="M12 14V3.5"/><path d="M8.5 6.5 12 3l3.5 3.5"/><path d="M7.5 10.5H6a2 2 0 0 0-2 2V19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6.5a2 2 0 0 0-2-2h-1.5"/>',
+  doc:'<path d="M6.5 3h7.5l4 4v14h-11.5z"/><path d="M14 3v4h4"/><path d="M9.5 12.5h5M9.5 16h5"/>',
+  dots:'<circle cx="5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.7" fill="currentColor" stroke="none"/>',
+  alert:'<circle cx="12" cy="12" r="9"/><path d="M12 7.5v5"/><circle cx="12" cy="16.2" r="1" fill="currentColor" stroke="none"/>'
+};
+const icon=(n,s=22)=>`<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[n]}</svg>`;
+
+/* ---------- estado + semente (contrato Santander do anexo) ---------- */
+const LS='carteira.v1';
+const COLORS=['#0E7C5C','#33475B','#7C3A38','#7E5B22','#33363C','#44523D'];
+
+function genInstallments(c){
+  const [y,m,d]=c.firstDue.split('-').map(Number), arr=[];
+  for(let i=1;i<=c.n;i++) arr.push({n:i, due:ymd(new Date(y,m-1+i-1,d)), nominal:r2(c.pmt)});
+  return arr;
+}
+function defaultState(){
+  const contract={
+    op:'133171897/00711383693', bank:'Santander SCCFI S.A.', bankCNPJ:'07.707.650/0001-10',
+    client:'Josenildo Guedes Santos', cpf:'037.382.924-89', dealer:'BG Multimarcas LTDA',
+    vehicle:{brand:'Toyota',model:'Corolla GLI 1.8 Flex 16V Aut.',year:'2011',color:'Prata',plate:'NNZ2H70',chassi:'9BRBB42E0B5151146',renavam:'270621229'},
+    price:59900.00, prestamista:894.31, ap:4683.94, regTraffic:400.00, subtotal:65878.25,
+    down:1703.75, tCad:1199.00, tAval:799.00, finNoTax:66172.50, iof:1883.61, iofAdd:251.45,
+    financed:68307.56, n:48, pmt:2159.58, firstDue:'2026-05-25',
+    rateD:0.06, rateM:1.85, rateA:24.61, cetM:2.62, cetA:36.92,
+    totalPaid:105363.59, payMethod:'Boleto', insurer:'Zurich Santander',
+    apPrest:'1099454', apAP:'0002972', signed:'2026-04-25', place:'Natal/RN'
+  };
+  const s={v:1,createdAt:Date.now(),lastBackup:null,fin:{contract,installments:[]},cards:[],expenses:[],invPay:{}};
+  s.fin.installments=genInstallments(contract);
+  return s;
+}
+let S;
+try{ S=JSON.parse(localStorage.getItem(LS)) || defaultState(); }catch(e){ S=defaultState(); }
+if(!S.fin||!S.fin.installments) S=defaultState();
+function save(){ S.updatedAt=Date.now(); try{ localStorage.setItem(LS,JSON.stringify(S)); }catch(e){} }
+
+/* ---------- Módulo 1: lógica do financiamento ---------- */
+function instState(it){
+  if(!it.paid) return 'open';
+  return (it.paid.amount + (it.paid.discount||0) + 0.005 >= it.nominal) ? 'paid' : 'partial';
+}
+function finStats(){
+  const ins=S.fin.installments;
+  let paid=0,paidAmt=0,disc=0,late=0,next=null,openRest=0;
+  ins.forEach(it=>{
+    const st=instState(it);
+    if(st==='paid'){ paid++; paidAmt+=it.paid.amount; disc+=r2(it.nominal-it.paid.amount); }
+    else{
+      openRest+=r2(it.nominal-(it.paid?it.paid.discount+it.paid.amount:0));
+      if(!next) next=it;
+      if(daysTo(it.due)<0) late++;
+    }
+  });
+  return {count:ins.length,paid,paidAmt:r2(paidAmt),disc:r2(disc),late,next,openRest:r2(openRest)};
+}
+/* saldo devedor pela Tabela Price com a taxa contratual (para quitação antecipada) */
+function priceBalance(k){
+  const c=S.fin.contract, i=c.rateM/100;
+  if(k>=c.n||i<=0) return 0;
+  const f=Math.pow(1+i,k);
+  return r2(Math.max(0, c.financed*f - c.pmt*(f-1)/i));
+}
+function regenerateInstallments(){
+  const old={}; S.fin.installments.forEach(it=>{ if(it.paid) old[it.n]=it.paid; });
+  S.fin.installments=genInstallments(S.fin.contract);
+  S.fin.installments.forEach(it=>{ if(old[it.n]) it.paid=old[it.n]; });
+}
+function applySettle(val,date){
+  const open=S.fin.installments.filter(i=>instState(i)!=='paid');
+  const sum=r2(open.reduce((s,i)=>s+i.nominal,0));
+  if(!open.length) return;
+  const ratio=sum>0?val/sum:0; let acc=0;
+  open.forEach((it,idx)=>{
+    let amt = idx===open.length-1 ? r2(val-acc) : r2(it.nominal*ratio);
+    acc=r2(acc+amt);
+    amt=Math.max(0,Math.min(amt,it.nominal));
+    it.paid={date,amount:amt,discount:r2(it.nominal-amt)};
+  });
+}
+
+/* ---------- Módulo 2: lógica de cartões e faturas ---------- */
+const cardById=id=>S.cards.find(c=>c.id===id);
+function splitInstallments(total,n){
+  if(n<=1) return [r2(total)];
+  const b=r2(total/n), arr=Array(n).fill(b);
+  arr[n-1]=r2(total-b*(n-1));
+  return arr;
+}
+function cycAdd(c,k){ let m=c.m+k,y=c.y; y+=Math.floor((m-1)/12); m=((m-1)%12)+1; return {y,m}; }
+/* ciclo (mês do fechamento) em que a compra entra */
+function purchaseCycle(dateStr,closeDay){
+  const [y,m,d]=dateStr.split('-').map(Number);
+  return d>closeDay ? cycAdd({y,m},1) : {y,m};
+}
+function currentOpenCycle(card){
+  const t=new Date(); let y=t.getFullYear(),m=t.getMonth()+1;
+  if(t.getDate()>card.closeDay) return cycAdd({y,m},1);
+  return {y,m};
+}
+const cycKey=c=>c.y+'-'+pad(c.m);
+/* datas reais de fechamento e vencimento da fatura de um ciclo */
+function invoiceDates(card,cyc){
+  const dim=(y,m)=>new Date(y,m,0).getDate();
+  const cd=Math.min(card.closeDay,dim(cyc.y,cyc.m));
+  let y=cyc.y,m=cyc.m;
+  if(card.dueDay<=card.closeDay){ m++; if(m>12){m=1;y++;} }
+  return {close:new Date(cyc.y,cyc.m-1,cd), due:new Date(y,m-1,Math.min(card.dueDay,dim(y,m)))};
+}
+/* todos os ciclos do cartão com suas parcelas */
+function cardCycles(card){
+  const map=new Map();
+  S.expenses.filter(e=>e.cardId===card.id).forEach(e=>{
+    const first=purchaseCycle(e.date,card.closeDay);
+    const units=splitInstallments(e.total,e.n);
+    for(let k=0;k<e.n;k++){
+      const cy=cycAdd(first,k), key=cycKey(cy);
+      if(!map.has(key)) map.set(key,{key,y:cy.y,m:cy.m,items:[]});
+      map.get(key).items.push({eid:e.id,desc:e.desc,k:k+1,n:e.n,val:units[k]});
+    }
+  });
+  const open=currentOpenCycle(card), ok=cycKey(open);
+  if(!map.has(ok)) map.set(ok,{key:ok,y:open.y,m:open.m,items:[]});
+  const pays=S.invPay[card.id]||{};
+  Object.keys(pays).forEach(k=>{
+    if(pays[k]&&pays[k].length&&!map.has(k)){ const [y,m]=k.split('-').map(Number); map.set(k,{key:k,y,m,items:[]}); }
+  });
+  return [...map.values()].sort((a,b)=>b.key<a.key?1:-1);
+}
+/* fatura calculada: total, pagamentos, status e datas */
+function invoiceCalc(card,cyc){
+  const items=cyc.items||[];
+  const total=r2(items.reduce((s,i)=>s+i.val,0));
+  const pays=(S.invPay[card.id]||{})[cyc.key]||[];
+  const paidAmt=r2(pays.reduce((s,p)=>s+p.amount,0));
+  const rest=Math.max(0,r2(total-paidAmt));
+  const dd=invoiceDates(card,cyc);
+  const close=ymd(dd.close), due=ymd(dd.due), today=todayStr();
+  let status;
+  if(total<=0.005&&paidAmt<=0.005) status='empty';
+  else if(paidAmt+0.005>=total) status='paid';
+  else if(close>today) status=(cyc.key===cycKey(currentOpenCycle(card)))?'current':'future';
+  else if(due>=today) status='closed';
+  else status='overdue';
+  return {cyc,items,total,paidAmt,rest,close,due,status};
+}
+function findInv(card,key){ const c=cardCycles(card).find(x=>x.key===key); return c?invoiceCalc(card,c):null; }
+/* limite: usado = parcelas ainda não quitadas (faturas em aberto + a lançar) */
+function cardUsage(card){
+  let toPay=0,toLaunch=0;
+  cardCycles(card).forEach(cyc=>{
+    const inv=invoiceCalc(card,cyc);
+    if(inv.status==='paid'||inv.status==='empty') return;
+    if(inv.close<=todayStr()) toPay+=inv.rest; else toLaunch+=inv.rest;
+  });
+  const used=r2(toPay+toLaunch);
+  return {used,toPay:r2(toPay),toLaunch:r2(toLaunch),avail:Math.max(0,r2(card.limit-used))};
+}
+function pillFor(st){
+  return st==='paid'?{cls:'tint',txt:'Paga'}
+    : st==='current'?{cls:'tint',txt:'Atual'}
+    : st==='future'?{cls:'gr',txt:'Prevista'}
+    : st==='closed'?{cls:'amb',txt:'Em aberto'}
+    : st==='overdue'?{cls:'red',txt:'Vencida'}
+    : {cls:'gr',txt:'—'};
+}
+
+/* ---------- eventos dos próximos 30 dias ---------- */
+function upcomingEvents(){
+  const t0=+pD(todayStr()), H=t0+30*864e5, evs=[];
+  S.fin.installments.forEach(it=>{
+    if(instState(it)==='paid') return;
+    const d=+pD(it.due); if(d>H) return;
+    evs.push({t:d,kind:d<t0?'late':'fin',title:'Parcela '+it.n+' • Financiamento',
+      val:r2(it.nominal-(it.paid?it.paid.discount+it.paid.amount:0)),act:'inst',n:it.n});
+  });
+  S.cards.forEach(c=>cardCycles(c).forEach(cy=>{
+    const inv=invoiceCalc(c,cy); if(inv.status==='empty') return;
+    const cd=+pD(inv.close);
+    if(cd>=t0&&cd<=H) evs.push({t:cd,kind:'close',title:'Fecha fatura '+c.name,val:inv.total,act:'card',id:c.id});
+    if(inv.status!=='paid'&&inv.rest>0.005){
+      const dd=+pD(inv.due);
+      if(dd<=H) evs.push({t:dd,kind:dd<t0?'late':'due',title:(dd<t0?'Fatura vencida • ':'Vence fatura ')+c.name,val:inv.rest,act:'invoice',id:c.id,key:cy.key});
+    }
+  }));
+  evs.sort((a,b)=>a.t-b.t);
+  return evs.slice(0,12);
+}
+function monthCommitments(){
+  const now=new Date(), m=now.getMonth(), y=now.getFullYear();
+  let total=0,finN=0,cardN=0;
+  S.fin.installments.forEach(it=>{
+    if(instState(it)==='paid') return;
+    const d=pD(it.due);
+    if(d.getMonth()===m&&d.getFullYear()===y){ total+=r2(it.nominal-(it.paid?it.paid.discount+it.paid.amount:0)); finN++; }
+  });
+  S.cards.forEach(c=>cardCycles(c).forEach(cy=>{
+    const inv=invoiceCalc(c,cy);
+    if(inv.status==='paid'||inv.status==='empty') return;
+    const d=pD(inv.due);
+    if(d.getMonth()===m&&d.getFullYear()===y){ total+=inv.rest; cardN++; }
+  }));
+  return {total:r2(total),finN,cardN,label:MONTHS[m]};
+}
+
+/* ---------- navegação: abas, stack, badges ---------- */
+const stack=$('#stack'), sheetRoot=$('#sheet-root');
+let currentTab='home', suppressClick=false, cardFormState=null;
+
+function switchTab(tab){
+  currentTab=tab;
+  $$('.view').forEach(v=>v.classList.toggle('on',v.id==='view-'+tab));
+  $$('#tabbar .tab').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
+  renderView(tab);
+}
+function renderView(tab){
+  const sc=$('#scroll-'+tab), pg=$('#page-'+tab), st=sc.scrollTop;
+  if(tab==='home') renderHomeInto(pg);
+  else if(tab==='fin') renderFinInto(pg);
+  else if(tab==='cards') renderCardsInto(pg);
+  else renderSettingsInto(pg);
+  sc.scrollTop=st;
+}
+function refresh(){
+  updateBadges();
+  if(stack.children.length){ const top=stack.lastElementChild; top._update&&top._update(); }
+  else renderView(currentTab);
+}
+function commit(){ save(); refresh(); }
+function updateBadges(){
+  const fs=finStats();
+  $('#bdg-fin').textContent=fs.late||'';
+  let od=0;
+  S.cards.forEach(c=>cardCycles(c).forEach(cy=>{ if(invoiceCalc(c,cy).status==='overdue') od++; }));
+  $('#bdg-cards').textContent=od||'';
+}
+function pushScreen(navTitle,backLabel,rightHtml){
+  const el=document.createElement('div'); el.className='push';
+  el.innerHTML=`<header class="navbar">
+    <div class="nb-l"><button class="nb-btn" data-act="pop">${icon('back',18)}<span>${backLabel}</span></button></div>
+    <div class="nb-t">${navTitle}</div>
+    <div class="nb-r">${rightHtml||''}</div></header>
+    <div class="scroll"><div class="page"></div></div>`;
+  stack.appendChild(el);
+  const sc=el.querySelector('.scroll'), nv=el.querySelector('.navbar');
+  sc.addEventListener('scroll',()=>nv.classList.toggle('lif',sc.scrollTop>24),{passive:true});
+  requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('in')));
+  return el;
+}
+function popPush(){
+  const el=stack.lastElementChild; if(!el) return;
+  el.classList.remove('in');
+  setTimeout(()=>el.remove(),450);
+}
+function clearStack(){ while(stack.children.length) stack.lastElementChild.remove(); }
+
+/* ---------- componentes: toast, alerta, action sheet, sheet ---------- */
+function toast(msg,err){
+  const t=document.createElement('div');
+  t.className='toast'+(err?' err':'');
+  t.innerHTML=icon(err?'alert':'check',18)+`<span>${msg}</span>`;
+  $('#toast-root').appendChild(t);
+  requestAnimationFrame(()=>t.classList.add('in'));
+  setTimeout(()=>{ t.classList.remove('in'); setTimeout(()=>t.remove(),380); },2500);
+}
+function confirmDialog(title,msg,ok='Confirmar',danger=false){
+  return new Promise(res=>{
+    const el=$('#alert-root');
+    el.innerHTML=`<div class="bk"></div><div class="al"><div class="ttl">${title}</div><div class="msg">${msg}</div>
+      <div class="btns"><button data-r="0">Cancelar</button><button class="ok${danger?' d':''}" data-r="1">${ok}</button></div></div>`;
+    el.classList.add('show');
+    requestAnimationFrame(()=>el.classList.add('on'));
+    const done=v=>{ el.classList.remove('on'); setTimeout(()=>{ el.classList.remove('show'); el.innerHTML=''; },260); res(v); };
+    el.querySelectorAll('.btns button').forEach(b=>b.addEventListener('click',()=>done(b.dataset.r==='1')));
+    el.querySelector('.bk').addEventListener('click',()=>done(false));
+  });
+}
+function actionSheet(title,options){
+  return new Promise(res=>{
+    const el=$('#as-root');
+    el.innerHTML=`<div class="as-bk"></div><div class="as-wrap">
+      <div class="as-card">${title?`<div class="as-t">${title}</div>`:''}
+        ${options.map((o,i)=>`<button class="as-b${o.danger?' d':''}" data-i="${i}">${o.label}</button>`).join('')}</div>
+      <div class="as-card"><button class="as-b c" data-i="-1">Cancelar</button></div></div>`;
+    requestAnimationFrame(()=>el.classList.add('show'));
+    const done=v=>{ el.classList.remove('show'); setTimeout(()=>el.innerHTML='',380); res(v); };
+    el.querySelector('.as-bk').addEventListener('click',()=>done(null));
+    el.querySelectorAll('.as-b').forEach(b=>b.addEventListener('click',()=>done(+b.dataset.i)));
+  });
+}
+function openSheet(html){
+  sheetRoot.innerHTML=`<div class="bk"></div><div class="sheet"><div class="grip"></div><div class="sheet-body">${html}</div></div>`;
+  sheetRoot.getBoundingClientRect();
+  sheetRoot.classList.add('show');
+  sheetRoot.querySelector('.bk').addEventListener('click',closeSheet);
+  const sheet=sheetRoot.querySelector('.sheet'), grip=sheetRoot.querySelector('.grip');
+  let sy=0,dy=0,drag=false;
+  grip.addEventListener('pointerdown',e=>{ drag=true; sy=e.clientY; dy=0; sheet.style.transition='none'; grip.setPointerCapture(e.pointerId); });
+  grip.addEventListener('pointermove',e=>{ if(!drag)return; dy=Math.max(0,e.clientY-sy); sheet.style.transform=`translateY(${dy}px)`; });
+  const end=()=>{
+    if(!drag) return; drag=false; sheet.style.transition='';
+    if(dy>110){
+      sheet.style.transition='transform .32s cubic-bezier(.32,.72,0,1)';
+      sheet.style.transform='translateY(112%)';
+      sheetRoot.classList.remove('show');
+      setTimeout(()=>{ sheetRoot.innerHTML=''; },360);
+    } else sheet.style.transform='';
+    dy=0;
+  };
+  grip.addEventListener('pointerup',end);
+  grip.addEventListener('pointercancel',end);
+}
+function closeSheet(){
+  sheetRoot.classList.remove('show');
+  setTimeout(()=>{ sheetRoot.innerHTML=''; },400);
+}
+
+/* ---------- renderização: Início ---------- */
+function tickEl(it){
+  const st=instState(it);
+  const cls=st==='paid'?'p':st==='partial'?'a':(daysTo(it.due)<0?'l':'');
+  return `<i class="tick ${cls}"></i>`;
+}
+function renderHomeInto(pg){
+  const fs=finStats(), mc=monthCommitments(), c=S.fin.contract;
+  const parts=[];
+  if(mc.finN) parts.push(mc.finN+(mc.finN>1?' parcelas':' parcela')+' do financiamento');
+  if(mc.cardN) parts.push(mc.cardN+(mc.cardN>1?' faturas':' fatura'));
+  pg.innerHTML=`
+    <h1 class="lt">Carteira</h1>
+    <p class="sub">${fmtDateLong()}</p>
+    <div class="card hero">
+      <div class="lbl">Compromissos de ${mc.label}</div>
+      <div class="big">${fmtV(mc.total)}</div>
+      <div class="s">${parts.join(' • ')||'nenhum vencimento este mês'}</div>
+    </div>
+    <div class="sec-h">Financiamento</div>
+    ${homeFinCard(fs,c)}
+    <div class="sec-h">Cartões</div>
+    ${homeCardsCard()}
+    <div class="sec-h">Próximos 30 dias</div>
+    ${upcomingList()}
+    <p class="foot">Carteira • funciona offline • seus dados ficam somente neste aparelho</p>`;
+}
+function homeFinCard(fs,c){
+  const next=fs.next, d=next?daysTo(next.due):null;
+  return `<div class="card press" data-act="tab" data-tab="fin">
+    <div class="row">
+      <div class="icb">${icon('car',19)}</div>
+      <div class="grow"><div class="t">${esc(c.vehicle.model)}</div><div class="s">${esc(c.bank.split(' ')[0])} • ${c.n} parcelas de ${fmtV(c.pmt)}</div></div>
+      <span class="chev">${icon('chev',16)}</span>
+    </div>
+    <div class="ticks">${S.fin.installments.map(tickEl).join('')}</div>
+    <div class="tlegend"><span>${fs.paid}/${fs.count} quitadas</span>${fs.late?`<span class="red">${fs.late} atrasadas</span>`:''}</div>
+    <div class="krow">
+      <div><div class="k">Pago</div><div class="v">${fmtV(fs.paidAmt)}</div></div>
+      <div><div class="k">Economia</div><div class="v tint">${fmtV(fs.disc)}</div></div>
+      <div><div class="k">Restante</div><div class="v">${fmtV(fs.openRest)}</div></div>
+    </div>
+    ${next?`<div class="row"><div class="grow"><div class="t">Próxima • parcela ${next.n}</div><div class="s">${fmtDate(next.due)} • ${fmtV(next.nominal)}</div></div>
+      <span class="pill ${d<0?'red':'tint'}">${relDue(next.due)}</span></div>`:''}
+  </div>`;
+}
+function nextPendingInvoice(c){
+  let best=null;
+  cardCycles(c).forEach(cy=>{
+    const inv=invoiceCalc(c,cy);
+    if(inv.status==='paid'||inv.status==='empty'||inv.rest<=0.005) return;
+    if(!best||inv.due<best.due) best=inv;
+  });
+  return best;
+}
+function homeCardsCard(){
+  if(!S.cards.length) return `<div class="card"><div class="empty sm">${icon('wallet',40)}
+    <div class="t">Nenhum cartão</div><div class="s">Adicione cartões na aba Cartões para acompanhar faturas e limites</div></div></div>`;
+  const lim=r2(S.cards.reduce((s,c)=>s+c.limit,0));
+  let used=0,avail=0;
+  S.cards.forEach(c=>{ const u=cardUsage(c); used+=u.used; avail+=u.avail; });
+  const pct=lim?Math.min(100,Math.round(used/lim*100)):0;
+  return `<div class="card">
+    <div class="finv"><div class="lbl">Disponível total</div><div class="big sm">${fmtV(r2(avail))}</div>
+      <div class="s">de ${fmtV(lim)} em ${S.cards.length} ${S.cards.length>1?'cartões':'cartão'}</div></div>
+    <div class="bar${used>lim?' bad':(pct>70?' warn':'')}"><i style="width:${pct}%"></i></div>
+    <div style="height:8px"></div>
+    ${S.cards.map(c=>{
+      const nd=nextPendingInvoice(c);
+      return `<div class="row press" data-act="card" data-id="${c.id}">
+        <span class="dot" style="background:${c.color}"></span>
+        <div class="grow"><div class="t">${esc(c.name)}</div><div class="s">${nd?'vence '+fmtDate(nd.due):'sem faturas pendentes'}</div></div>
+        <div class="val sm">${nd?fmtV(nd.rest):'—'}</div>
+      </div>`;}).join('')}
+  </div>`;
+}
+function upcomingList(){
+  const evs=upcomingEvents();
+  if(!evs.length) return `<div class="card"><div class="row"><div class="s">Nada previsto para os próximos 30 dias</div></div></div>`;
+  return `<div class="card">${evs.map(ev=>{
+    const d=new Date(ev.t);
+    const act=ev.act==='inst'?`data-act="inst" data-n="${ev.n}"`
+      :ev.act==='card'?`data-act="card" data-id="${ev.id}"`
+      :ev.act==='invoice'?`data-act="invoice" data-id="${ev.id}" data-key="${ev.key}"`:'';
+    const dot=ev.kind==='fin'?'':(ev.kind==='late'||ev.kind==='due')?'red':(ev.kind==='close'?'gr':'amb');
+    return `<div class="row press" ${act}>
+      <div class="tl-date"><div class="d">${d.getDate()}</div><div class="m">${MON[d.getMonth()]}</div></div>
+      <span class="tl-dot ${dot}"></span>
+      <div class="grow"><div class="t">${esc(ev.title)}</div></div>
+      <div class="val">${fmtV(ev.val)}</div>
+    </div>`;}).join('')}</div>`;
+}
+
+/* ---------- renderização: Financiamento ---------- */
+function renderFinInto(pg){
+  const c=S.fin.contract, fs=finStats(), v=c.vehicle;
+  const instRow=it=>{
+    const st=instState(it), late=st!=='paid'&&daysTo(it.due)<0;
+    let right='',sub=fmtDate(it.due),cls='';
+    if(st==='paid'){
+      const eco=r2(it.nominal-it.paid.amount);
+      right=`<div class="val tint">${fmtV(it.paid.amount)}</div>`;
+      sub=`pago em ${fmtDate(it.paid.date)}${eco>0.005?' • economizou '+fmtV(eco):''}`;
+    }else if(st==='partial'){
+      right=`<div class="val">${fmtV(it.nominal)}</div>`;
+      sub=`parcial • falta ${fmtV(r2(it.nominal-it.paid.discount-it.paid.amount))}`;
+    }else{
+      right=`<div class="val">${fmtV(it.nominal)}</div>`;
+      if(late){ sub=relDue(it.due); cls='red'; }
+      else if(daysTo(it.due)<=10) sub=relDue(it.due);
+    }
+    return `<div class="row press" data-act="inst" data-n="${it.n}">
+      <div class="grow"><div class="t">Parcela ${it.n}</div><div class="s ${cls}">${sub}</div></div>
+      <div class="rcol">${right}</div></div>`;
+  };
+  const years={};
+  S.fin.installments.forEach(it=>{ const y=it.due.slice(0,4); (years[y]=years[y]||[]).push(it); });
+  pg.innerHTML=`
+    <h1 class="lt">Financiamento</h1>
+    <p class="sub">Operação nº ${c.op}</p>
+    <div class="card">
+      <div class="ticks">${S.fin.installments.map(tickEl).join('')}</div>
+      <div class="tlegend"><span>${fs.paid}/${fs.count} quitadas</span>${fs.late?`<span class="red">${fs.late} atrasadas</span>`:''}</div>
+      <div class="krow">
+        <div><div class="k">Total pago</div><div class="v">${fmtV(fs.paidAmt)}</div></div>
+        <div><div class="k">Economia com descontos</div><div class="v tint">${fmtV(fs.disc)}</div></div>
+        <div><div class="k">Restante</div><div class="v">${fmtV(fs.openRest)}</div></div>
+        <div><div class="k">Juros embutidos no contrato</div><div class="v">${fmtV(r2(c.totalPaid-c.financed))}</div></div>
+      </div>
+    </div>
+    ${fs.next?`
+    <div class="card">
+      <div class="row"><div class="grow"><div class="s">Próxima parcela</div><div class="t">Parcela ${fs.next.n} de ${c.n}</div></div>
+        <span class="pill ${daysTo(fs.next.due)<0?'red':'tint'}">${relDue(fs.next.due)}</span></div>
+      <div class="finv"><div class="big sm">${fmtV(fs.next.nominal)}</div><div class="s">vencimento ${fmtDate(fs.next.due)}</div></div>
+      <div class="pad" style="display:flex;flex-direction:column;gap:10px">
+        <button class="btn pri" data-act="inst" data-n="${fs.next.n}">Registrar pagamento</button>
+        <button class="btn quiet" data-act="settle">Simular quitação antecipada</button>
+      </div>
+    </div>`:`
+    <div class="card"><div class="finv"><div class="lbl">Financiamento quitado</div>
+      <div class="big sm tint">${icon('check',28)}</div>
+      <div class="s">Total pago ${fmtV(fs.paidAmt)} • economia de ${fmtV(fs.disc)} com descontos</div></div></div>`}
+    <div class="sec-h">Contrato</div>
+    <div class="card">
+      <div class="row"><div class="grow"><div class="t">${esc(v.brand)} ${esc(v.model)}</div><div class="s">${v.year} • ${esc(v.color)} • placa ${v.plate}</div></div></div>
+      <div class="row"><div class="s grow">Valor financiado</div><div class="val sm">${fmtV(c.financed)}</div></div>
+      <div class="row"><div class="s grow">Parcelas</div><div class="val sm">${c.n} × ${fmtV(c.pmt)}</div></div>
+      <div class="row"><div class="s grow">Juros / CET</div><div class="val sm">${String(c.rateM).replace('.',',')}% a.m. • ${String(c.cetA).replace('.',',')}% a.a.</div></div>
+      <div class="row press" data-act="contract"><div class="t grow tint">Ver contrato completo</div><span class="chev">${icon('chev',16)}</span></div>
+      <div class="row press" data-act="edit-contract"><div class="t grow tint">Editar condições</div><span class="chev">${icon('chev',16)}</span></div>
+    </div>
+    ${Object.keys(years).sort().map(y=>`<div class="sec-h">${y}</div>
+      <div class="card">${years[y].map(instRow).join('')}</div>`).join('')}`;
+}
+
+/* ---------- renderização: Cartões (lista) ---------- */
+function renderCardsInto(pg){
+  const cards=S.cards;
+  const lim=cards.length?r2(cards.reduce((s,c)=>s+c.limit,0)):0;
+  pg.innerHTML=`<h1 class="lt">Cartões</h1>
+    ${cards.length?`<p class="sub">${cards.length} ${cards.length>1?'cartões':'cartão'} • limite total ${fmtV(lim)}</p>`:''}
+    ${cards.length?cards.map(cardCard).join(''):
+    `<div class="card"><div class="empty">${icon('wallet',44)}
+      <div class="t">Nenhum cartão cadastrado</div>
+      <div class="s">Toque no + acima para cadastrar um cartão de crédito com limite, fechamento e vencimento</div></div></div>`}`;
+}
+function cardCard(c){
+  const curKey=cycKey(currentOpenCycle(c));
+  const cyc=cardCycles(c).find(x=>x.key===curKey);
+  const inv=invoiceCalc(c,cyc);
+  const u=cardUsage(c);
+  const pct=c.limit?Math.min(100,Math.round(u.used/c.limit*100)):0;
+  const p=pillFor(inv.status);
+  return `<div class="card press" data-act="card" data-id="${c.id}">
+    <div class="row">
+      <span class="dot" style="background:${c.color}"></span>
+      <div class="grow"><div class="t">${esc(c.name)}</div><div class="s">${esc(c.issuer||'')}</div></div>
+      <span class="pill ${p.cls}">${p.txt}</span>
+    </div>
+    <div class="finv">
+      <div class="lbl">Fatura de ${MONTHS[cyc.m-1]}</div>
+      <div class="big sm">${fmtV(inv.total)}</div>
+      <div class="s">fecha ${fmtDate(inv.close)} • vence ${fmtDate(inv.due)}</div>
+    </div>
+    <div class="bar${u.used>c.limit?' bad':(pct>70?' warn':'')}"><i style="width:${pct}%"></i></div>
+    <div class="lrow"><span>Disponível <b>${fmtV(u.avail)}</b></span><span>de ${fmtV(c.limit)}</span></div>
+  </div>`;
+}
+
+/* ---------- renderização: detalhe do cartão ---------- */
+function pushCardDetail(id){
+  if(!cardById(id)) return;
+  const el=pushScreen(esc(cardById(id).name),'Cartões',
+    `<button class="nb-ic" data-act="card-menu" data-id="${id}" aria-label="Opções">${icon('dots',20)}</button>`);
+  el._update=()=>{ const c=cardById(id); if(!c){popPush();return;} renderCardDetailInto(el,c); };
+  el._update();
+}
+function renderCardDetailInto(el,c){
+  const pg=el.querySelector('.page'), st=pg.parentElement.scrollTop;
+  const u=cardUsage(c);
+  const pct=c.limit?Math.min(100,Math.round(u.used/c.limit*100)):0;
+  const curKey=cycKey(currentOpenCycle(c));
+  const cycs=cardCycles(c);
+  const cur=cycs.find(x=>x.key===curKey);
+  const inv=invoiceCalc(c,cur);
+  const p=pillFor(inv.status);
+  const exps=S.expenses.filter(e=>e.cardId===c.id).slice().reverse();
+  pg.innerHTML=`
+    <div class="card">
+      <div class="limb"><div class="lbl">Disponível</div><div class="big">${fmtV(u.avail)}</div>
+        <div class="s">de ${fmtV(c.limit)}${c.issuer?' • '+esc(c.issuer):''}</div></div>
+      <div class="bar${u.used>c.limit?' bad':(pct>70?' warn':'')}"><i style="width:${pct}%"></i></div>
+      <div class="krow">
+        <div><div class="k">Utilizado</div><div class="v">${fmtV(u.used)}</div></div>
+        <div><div class="k">Em faturas a pagar</div><div class="v">${fmtV(u.toPay)}</div></div>
+        <div><div class="k">A lançar (futuro)</div><div class="v">${fmtV(u.toLaunch)}</div></div>
+      </div>
+    </div>
+    <div class="sec-h">Fatura de ${MONTHS[cur.m-1]}</div>
+    <div class="card">
+      <div class="row"><div class="grow"><div class="t">${fmtV(inv.total)}</div>
+        <div class="s">fecha ${fmtDate(inv.close)} • vence ${fmtDate(inv.due)}</div></div>
+        <span class="pill ${p.cls}">${p.txt}</span></div>
+      ${inv.rest>0.005?`<div class="row"><div class="s grow">${inv.status==='overdue'?'Em atraso':'Falta pagar'}</div>
+        <div class="val${inv.status==='overdue'?' red':''}">${fmtV(inv.rest)}</div></div>
+      <div class="pad"><button class="btn pri" data-act="pay-inv" data-id="${c.id}" data-key="${curKey}">Registrar pagamento</button></div>`:''}
+    </div>
+    <div class="sec-h">Faturas</div>
+    <div class="card">${
+      cycs.filter(cy=>{const i=invoiceCalc(c,cy);return i.status!=='empty'||cy.key===curKey;})
+          .map(cy=>invoiceRow(c,invoiceCalc(c,cy))).join('')
+      ||'<div class="row"><div class="s">Nenhuma fatura ainda</div></div>'}</div>
+    <div class="sec-h"><span>Despesas</span><button class="lnk" data-act="new-exp" data-card="${c.id}">Adicionar</button></div>
+    ${exps.length?`<div class="card">${exps.map(expenseRow).join('')}</div>`:
+    `<div class="card"><div class="empty sm">${icon('card',36)}<div class="s">Nenhuma despesa neste cartão — toque em Adicionar para lançar uma compra parcelada</div></div></div>`}
+    <p class="foot">Deslize uma despesa para a esquerda para excluir</p>`;
+  pg.parentElement.scrollTop=st;
+  pg.querySelectorAll('.swipe-row').forEach(attachSwipe);
+}
+function invoiceRow(card,inv){
+  const p=pillFor(inv.status);
+  return `<div class="row press" data-act="invoice" data-id="${card.id}" data-key="${inv.cyc.key}">
+    <div class="grow"><div class="t">${MONTHS[inv.cyc.m-1]} de ${inv.cyc.y}</div>
+      <div class="s">vence ${fmtDate(inv.due)}</div></div>
+    <div class="rcol"><div class="val">${fmtV(inv.total)}</div><div style="margin-top:3px"><span class="pill ${p.cls}">${p.txt}</span></div></div>
+  </div>`;
+}
+function expenseRow(e){
+  const units=splitInstallments(e.total,e.n);
+  const sub=(e.n>1?e.n+'× de '+fmtV(units[0])+' • total '+fmtV(e.total):'à vista • '+fmtV(e.total))+' • '+fmtDate(e.date);
+  return `<div class="swipe-row">
+    <div class="sw-a"><button class="sw-del" data-act="del-exp" data-id="${e.id}">${icon('trash',19)}<span>Excluir</span></button></div>
+    <div class="sw-c row press" data-act="edit-exp" data-id="${e.id}">
+      <div class="grow"><div class="t">${esc(e.desc)}</div><div class="s">${sub}</div></div>
+      <span class="chev">${icon('chev',16)}</span>
+    </div>
+  </div>`;
+}
+
+/* ---------- renderização: fatura ---------- */
+function pushInvoice(cardId,key){
+  const c=cardById(cardId); if(!c) return;
+  const el=pushScreen('Fatura • '+esc(c.name),esc(c.name));
+  el._update=()=>{ const cd=cardById(cardId); if(!cd){popPush();return;}
+    const cyc=cardCycles(cd).find(x=>x.key===key); if(!cyc){popPush();return;}
+    renderInvoiceInto(el,cd,cyc); };
+  el._update();
+}
+function renderInvoiceInto(el,c,cyc){
+  const pg=el.querySelector('.page'), st=pg.parentElement.scrollTop;
+  const inv=invoiceCalc(c,cyc);
+  const pays=(S.invPay[c.id]||{})[cyc.key]||[];
+  const p=pillFor(inv.status);
+  pg.innerHTML=`
+    <div class="card">
+      <div class="invc">
+        <span class="pill ${p.cls}">${p.txt}</span>
+        <div class="big" style="margin-top:8px">${fmtV(inv.total)}</div>
+        <div class="s">fecha ${fmtDate(inv.close)} • vence ${fmtDate(inv.due)}</div>
+      </div>
+      ${inv.total>0?`<div class="row"><div class="s grow">Pago</div><div class="val tint">${fmtV(inv.paidAmt)}</div></div>
+      <div class="row"><div class="s grow">${inv.rest>0.005?(inv.status==='overdue'?'Em atraso':'Falta pagar'):'Quitada'}</div>
+        <div class="val${inv.status==='overdue'?' red':''}">${fmtV(inv.rest)}</div></div>`:''}
+      ${pays.map((pay,i)=>`<div class="row">
+        <div class="grow"><div class="t">${fmtV(pay.amount)}</div><div class="s">pago em ${fmtDate(pay.date)}</div></div>
+        <button class="mini-del" data-act="del-pay" data-id="${c.id}" data-key="${cyc.key}" data-i="${i}" aria-label="Remover pagamento">${icon('trash',17)}</button>
+      </div>`).join('')}
+      ${inv.rest>0.005?`<div class="pad"><button class="btn pri" data-act="pay-inv" data-id="${c.id}" data-key="${cyc.key}">Registrar pagamento</button></div>`:''}
+    </div>
+    ${inv.status==='current'?`<div class="note">Fatura em aberto — lançamentos feitos até ${fmtDate(inv.close)} entram nela.</div>`:''}
+    ${inv.status==='future'?`<div class="note">Fatura prevista — o valor pode mudar conforme novas compras.</div>`:''}
+    <div class="sec-h">Lançamentos (${inv.items.length})</div>
+    ${inv.items.length?`<div class="card">${inv.items.map(it=>`<div class="row">
+      <div class="grow"><div class="t">${esc(it.desc)}</div><div class="s">${it.n>1?it.k+'/'+it.n+' parcelas':''}</div></div>
+      <div class="val">${fmtV(it.val)}</div></div>`).join('')}</div>`:
+    `<div class="card"><div class="row"><div class="s">Sem lançamentos nesta fatura</div></div></div>`}`;
+  pg.parentElement.scrollTop=st;
+}
+
+/* ---------- renderização: Ajustes ---------- */
+function renderSettingsInto(pg){
+  const lb=S.lastBackup?fmtDate(ymd(new Date(S.lastBackup)))+' às '+new Date(S.lastBackup).toTimeString().slice(0,5):'nunca';
+  pg.innerHTML=`
+    <h1 class="lt">Ajustes</h1>
+    <p class="sub">Backup, dados e instalação</p>
+    <div class="sec-h">Backup</div>
+    <div class="card">
+      <div class="row press" data-act="export"><div class="icb">${icon('share',18)}</div>
+        <div class="grow"><div class="t">Exportar backup</div><div class="s">Último: ${lb}</div></div>
+        <span class="chev">${icon('chev',16)}</span></div>
+      <div class="row press" data-act="import"><div class="icb">${icon('doc',18)}</div>
+        <div class="grow"><div class="t">Importar backup</div><div class="s">Restaura de um arquivo .json</div></div>
+        <span class="chev">${icon('chev',16)}</span></div>
+    </div>
+    <div class="sec-h">Instalação no iPhone</div>
+    <div class="card">
+      <div class="step"><div class="n">1</div><p>Abra este app no <b>Safari</b> e toque no botão <b>Compartilhar</b> ${icon('share',15)} na barra inferior.</p></div>
+      <div class="step"><div class="n">2</div><p>Role a lista e toque em <b>Adicionar à Tela de Início</b>.</p></div>
+      <div class="step"><div class="n">3</div><p>Confirme — a Carteira passa a abrir em tela cheia, como um app nativo, e funciona sem internet.</p></div>
+    </div>
+    <div class="sec-h">Dados</div>
+    <div class="card">
+      <div class="row press" data-act="wipe"><div class="grow"><div class="t red">Apagar todos os dados</div>
+        <div class="s">Volta ao estado inicial, com o financiamento pré-cadastrado</div></div></div>
+    </div>
+    <div class="sec-h">Sobre</div>
+    <div class="card">
+      <div class="kv"><span class="k">Carteira</span><span class="v">versão 1.0</span></div>
+      <div class="kv"><span class="k">Armazenamento</span><span class="v">somente neste aparelho (offline)</span></div>
+    </div>
+    <p class="foot">Nada é enviado à internet — exporte backups com frequência</p>`;
+}
+
+/* ---------- sheets: pagamento de parcela ---------- */
+function openPaySheet(n){
+  const ins=S.fin.installments, it=ins.find(x=>x.n===n);
+  if(!it) return;
+  const idx=ins.indexOf(it);
+  const maxRep=Math.min(12,ins.slice(idx+1).filter(x=>instState(x)!=='paid').length);
+  const p=it.paid;
+  openSheet(`
+    <div class="sh-head"><div class="sh-title">Parcela ${it.n} de ${ins.length}</div>
+      <button class="sh-x" data-act="close-sheet">${icon('x',15)}</button></div>
+    <div class="card">
+      <div class="field"><label>Vencimento</label><input type="date" id="ip-due" value="${it.due}"></div>
+      <div class="field"><label>Valor da parcela</label><input class="mi" id="ip-nom" inputmode="decimal" value="${fmtIn(it.nominal)}"></div>
+      <div class="field"><label>Data do pagamento</label><input type="date" id="ip-date" value="${p?p.date:todayStr()}"></div>
+      <div class="field"><label>Valor pago</label><input class="mi" id="ip-amt" inputmode="decimal" placeholder="R$ 0,00" value="${p?fmtIn(p.amount):fmtIn(it.nominal)}"></div>
+      <div class="field"><label>Desconto obtido</label><input class="mi" id="ip-disc" inputmode="decimal" placeholder="R$ 0,00" value="${p?fmtIn(p.discount):''}"></div>
+    </div>
+    ${maxRep>0?`<div class="card">
+      <div class="field"><label>Aplicar também às próximas</label>
+        <div class="stepper" id="ip-rep"><button type="button" data-d="-1">−</button><span class="num">0</span><button type="button" data-d="1">+</button></div></div>
+      <div class="note in">Use ao pagar várias parcelas de uma vez (antecipação) — mesma data, valor e desconto nas parcelas seguintes. Os descontos são somados nas estatísticas.</div>
+    </div>`:''}
+    <div class="note">A parcela fica liquidada quando valor pago + desconto ≥ valor nominal.</div>
+    <div class="btns">
+      <button class="btn pri" data-act="save-inst" data-n="${it.n}">Salvar</button>
+      ${p?`<button class="btn dang" data-act="del-inst" data-n="${it.n}">Remover pagamento</button>`:''}
+    </div>`);
+  const stp=$('#ip-rep');
+  if(stp){
+    let rep=0; const num=stp.querySelector('.num');
+    stp.addEventListener('click',e=>{
+      const b=e.target.closest('button'); if(!b) return;
+      rep=Math.max(0,Math.min(maxRep,rep+ +b.dataset.d));
+      num.textContent=rep;
+    });
+  }
+}
+function saveInstallment(n){
+  const ins=S.fin.installments, idx=ins.findIndex(x=>x.n===n);
+  if(idx<0) return;
+  const nom=parseMoney($('#ip-nom').value);
+  const date=$('#ip-date').value||todayStr();
+  const due=$('#ip-due').value||ins[idx].due;
+  const amt=parseMoney($('#ip-amt').value);
+  const disc=parseMoney($('#ip-disc').value)||0;
+  if(!nom||nom<=0){ toast('Informe o valor da parcela',true); return; }
+  if(amt==null||amt<0){ toast('Valor pago inválido',true); return; }
+  const rep=parseInt(($('#ip-rep')?.querySelector('.num')||{textContent:'0'}).textContent,10)||0;
+  let count=0;
+  for(let j=idx;j<ins.length&&count<=rep;j++){
+    if(j>idx&&instState(ins[j])==='paid'){ j++; continue; }
+    if(j>=ins.length) break;
+    ins[j].nominal=r2(nom);
+    if(j===idx) ins[j].due=due;
+    ins[j].paid={date,amount:r2(amt),discount:r2(disc)};
+    count++; 
+  }
+  closeSheet(); commit();
+  toast(count>1?count+' parcelas lançadas':'Pagamento salvo');
+}
+async function removeInstPay(n){
+  const it=S.fin.installments.find(x=>x.n===n); if(!it) return;
+  const ok=await confirmDialog('Remover pagamento?','A parcela '+n+' voltará a ficar em aberto.','Remover',true);
+  if(!ok) return;
+  it.paid=null; closeSheet(); commit(); toast('Pagamento removido');
+}
+
+/* ---------- sheets: quitação antecipada ---------- */
+function sheetSettle(){
+  const c=S.fin.contract, fs=finStats();
+  if(fs.paid>=c.n){ toast('Financiamento já quitado'); return; }
+  const bal=priceBalance(fs.paid);
+  const openNom=r2(S.fin.installments.filter(i=>instState(i)!=='paid').reduce((s,i)=>s+i.nominal,0));
+  openSheet(`
+    <div class="sh-head"><div class="sh-title">Quitação antecipada</div>
+      <button class="sh-x" data-act="close-sheet">${icon('x',15)}</button></div>
+    <div class="card">
+      <div class="limb"><div class="lbl">Saldo devedor estimado hoje</div><div class="big">${fmtV(bal)}</div>
+        <div class="s">Tabela Price • taxa contratual</div></div>
+      <div class="row"><div class="s grow">Parcelas quitadas</div><div class="val sm">${fs.paid} de ${c.n}</div></div>
+      <div class="row"><div class="s grow">Soma das parcelas restantes</div><div class="val sm">${fmtV(openNom)}</div></div>
+      <div class="row"><div class="s grow">Economia de juros ao quitar</div><div class="val sm tint">${fmtV(r2(openNom-bal))}</div></div>
+    </div>
+    <div class="note">Estimativa pela Tabela Price com a taxa contratual de ${String(c.rateM).replace('.',',')}% a.m. O valor exato é informado pelo Santander no momento da negociação.</div>
+    <div class="btns"><button class="btn pri" data-act="settle-reg">Registrar quitação negociada</button></div>`);
+}
+function sheetSettleApply(){
+  const bal=priceBalance(finStats().paid);
+  openSheet(`
+    <div class="sh-head"><div class="sh-title">Quitar financiamento</div>
+      <button class="sh-x" data-act="close-sheet">${icon('x',15)}</button></div>
+    <div class="card">
+      <div class="field"><label>Valor negociado com o banco</label><input class="mi" id="sv-val" inputmode="decimal" value="${fmtIn(bal)}"></div>
+      <div class="field"><label>Data</label><input type="date" id="sv-date" value="${todayStr()}"></div>
+    </div>
+    <div class="note">Todas as parcelas em aberto serão liquidadas. O desconto (diferença entre o valor nominal restante e o negociado) será lançado parcela a parcela e somado às estatísticas.</div>
+    <div class="btns"><button class="btn pri" data-act="settle-do">Confirmar quitação</button></div>`);
+}
+async function doSettle(){
+  const val=parseMoney($('#sv-val').value), date=$('#sv-date').value||todayStr();
+  if(!val||val<=0){ toast('Informe o valor negociado',true); return; }
+  const ok=await confirmDialog('Quitar financiamento?','Todas as parcelas em aberto serão marcadas como pagas em '+fmtDate(date)+'.','Quitar',true);
+  if(!ok) return;
+  applySettle(val,date);
+  closeSheet(); commit(); toast('Financiamento quitado');
+}
+
+/* ---------- sheets: contrato ---------- */
+function sheetContract(){
+  const c=S.fin.contract, v=c.vehicle;
+  const sec=(t,rows)=>`<div class="sec-h">${t}</div><div class="card">${rows.map(r=>`<div class="kv"><span class="k">${r[0]}</span><span class="v">${r[1]}</span></div>`).join('')}</div>`;
+  openSheet(`
+    <div class="sh-head"><div class="sh-title">Contrato de financiamento</div>
+      <button class="sh-x" data-act="close-sheet">${icon('x',15)}</button></div>
+    <div class="note">Condições específicas — CDC Veículos • CCB registrada sob nº 3.816.413, Livro B, 2º RTD de São Paulo.</div>
+    ${sec('Cliente e operação',[
+      ['Cliente',esc(c.client)],['CPF',c.cpf],['Financeira',esc(c.bank)],['CNPJ',c.bankCNPJ],
+      ['Operação nº',c.op],['Correspondente',esc(c.dealer)],['Forma de pagamento',c.payMethod],
+      ['Assinado em',fmtDate(c.signed)+' • '+esc(c.place)]])}
+    ${sec('Veículo',[
+      ['Marca / modelo',esc(v.brand)+' '+esc(v.model)],['Ano',v.year],['Cor',esc(v.color)],
+      ['Placa',v.plate],['Chassi',v.chassi],['Renavam',v.renavam]])}
+    ${sec('Composição do valor',[
+      ['Veículo à vista',fmtV(c.price)],['Seguro Prestamista (financiado)',fmtV(c.prestamista)],
+      ['Seguro Acidentes Pessoais (financiado)',fmtV(c.ap)],['Registro em órgão de trânsito',fmtV(c.regTraffic)],
+      ['Subtotal (B.10)',fmtV(c.subtotal)],['Entrada (C.1)',fmtV(c.down)],
+      ['Valor líquido liberado',fmtV(r2(c.price-c.down))],['Tarifa de cadastro',fmtV(c.tCad)],
+      ['Tarifa de avaliação',fmtV(c.tAval)],['Total sem impostos (E.1)',fmtV(c.finNoTax)],
+      ['IOF',fmtV(c.iof)],['IOF adicional',fmtV(c.iofAdd)],['Total financiado (F.6)',fmtV(c.financed)]])}
+    ${sec('Condições',[
+      ['Parcelas',c.n+' mensais'],['Valor da parcela',fmtV(c.pmt)],['1º vencimento',fmtDate(c.firstDue)],
+      ['Juros','0,06% a.d. • 1,85% a.m. • 24,61% a.a.'],['CET','2,62% a.m. • 36,92% a.a.'],
+      ['Total pago ao final (G)',fmtV(c.totalPaid)],['Seguradora',esc(c.insurer)],
+      ['Apólices','Prestamista '+c.apPrest+' • AP '+c.apAP]])}`);
+}
+function sheetEditContract(){
+  const c=S.fin.contract;
+  openSheet(`
+    <div class="sh-head"><div class="sh-title">Editar condições</div>
+      <button class="sh-x" data-act="close-sheet">${icon('x',15)}</button></div>
+    <div class="card">
+      <div class="field"><label>Valor financiado</label><input class="mi" id="ec-fin" inputmode="decimal" value="${fmtIn(c.financed)}"></div>
+      <div class="field"><label>Valor da parcela</label><input class="mi" id="ec-pmt" inputmode="decimal" value="${fmtIn(c.pmt)}"></div>
+      <div class="field"><label>Nº de parcelas</label><input type="number" id="ec-n" min="1" max="120" inputstyle="numeric" inputmode="numeric" value="${c.n}"></div>
+      <div class="field"><label>1º vencimento</label><input type="date" id="ec-due" value="${c.firstDue}"></div>
+      <div class="field"><label>Taxa mensal (%)</label><input class="mi" id="ec-rate" inputmode="decimal" value="${fmtIn(c.rateM)}"></div>
+    </div>
+    <div class="note">As parcelas serão recalculadas. Pagamentos já lançados são mantidos nas parcelas de mesmo número.</div>
+    <div class="btns"><button class="btn pri" data-act="save-contract">Salvar</button></div>`);
+}
+async function saveContractEdit(){
+  const c=S.fin.contract;
+  const fin=parseMoney($('#ec-fin').value), pmt=parseMoney($('#ec-pmt').value), rate=parseMoney($('#ec-rate').value);
+  const n=parseInt($('#ec-n').value,10), due=$('#ec-due').value;
+  if(!fin||fin<=0||!pmt||pmt<=0||!n||n<1||n>120||!due||rate==null||rate<0){ toast('Confira os campos informados',true); return; }
+  const ok=await confirmDialog('Recalcular parcelas?','As parcelas serão geradas de novo a partir das novas condições.','Recalcular');
+  if(!ok) return;
+  Object.assign(c,{financed:r2(fin),pmt:r2(pmt),n,firstDue:due,rateM:rate});
+  regenerateInstallments();
+  closeSheet(); commit(); toast('Parcelas recalculadas');
+}
+
+/* ---------- sheets: cartões e despesas ---------- */
+function sheetNewCard(card){
+  cardFormState={close:card?card.closeDay:25,due:card?card.dueDay:10,color:card?card.color:COLORS[0]};
+  openSheet(`
+    <div class="sh-head"><div class="sh-title">${card?'Editar cartão':'Novo cartão'}</div>
+      <button class="sh-x" data-act="close-sheet">${icon('x',15)}</button></div>
+    <div class="card">
+      <div class="field"><label>Nome</label><input type="text" id="nc-name" maxlength="24" placeholder="Ex.: Nubank" value="${card?esc(card.name):''}"></div>
+      <div class="field"><label>Emissor</label><input type="text" id="nc-iss" maxlength="30" placeholder="Banco / instituição" value="${card?esc(card.issuer||''):''}"></div>
+      <div class="field"><label>Limite total</label><input class="mi" id="nc-lim" inputmode="decimal" placeholder="R$ 0,00" value="${card?fmtIn(card.limit):''}"></div>
+    </div>
+    <div class="card">
+      <div class="field"><label>Fechamento (dia)</label>
+        <div class="stepper" id="nc-close"><button type="button" data-d="-1">−</button><span class="num">${cardFormState.close}</span><button type="button" data-d="1">+</button></div></div>
+      <div class="field"><label>Vencimento (dia)</label>
+        <div class="stepper" id="nc-due"><button type="button" data-d="-1">−</button><span class="num">${cardFormState.due}</span><button type="button" data-d="1">+</button></div></div>
+    </div>
+    <div class="card">
+      <div class="dotrow">${COLORS.map(c=>`<button class="cdot${c===cardFormState.color?' on':''}" data-c="${c}" style="background:${c}" aria-label="cor"></button>`).join('')}</div>
+    </div>
+    <div class="note">Regra: compras feitas até o dia do fechamento entram na fatura daquele mês; o vencimento cai no mesmo mês ou no seguinte, conforme os dias informados.</div>
+    <div class="btns"><button class="btn pri" data-act="save-card" ${card?`data-id="${card.id}"`:''}>Salvar</button></div>`);
+  const bindStep=(id,key)=>{
+    const el=$('#'+id), num=el.querySelector('.num');
+    el.addEventListener('click',e=>{
+      const b=e.target.closest('button'); if(!b) return;
+      cardFormState[key]=Math.max(1,Math.min(31,cardFormState[key]+ +b.dataset.d));
+      num.textContent=cardFormState[key];
+    });
+  };
+  bindStep('nc-close','close'); bindStep('nc-due','due');
+  $$('.cdot').forEach(d=>d.addEventListener('click',()=>{
+    cardFormState.color=d.dataset.c;
+    $$('.cdot').forEach(x=>x.classList.toggle('on',x.dataset.c===cardFormState.color));
+  }));
+}
+function saveCardForm(id){
+  const name=$('#nc-name').value.trim(), iss=$('#nc-iss').value.trim();
+  const lim=parseMoney($('#nc-lim').value);
+  if(!name){ toast('Informe o nome do cartão',true); return; }
+  if(!lim||lim<=0){ toast('Informe o limite total',true); return; }
+  if(id){
+    const c=cardById(id); if(!c) return;
+    Object.assign(c,{name,issuer:iss,limit:r2(lim),closeDay:cardFormState.close,dueDay:cardFormState.due,color:cardFormState.color});
+    toast('Cartão atualizado');
+  }else{
+    S.cards.push({id:uid(),name,issuer:iss,limit:r2(lim),closeDay:cardFormState.close,dueDay:cardFormState.due,color:cardFormState.color});
+    toast('Cartão adicionado');
+  }
+  closeSheet(); commit();
+}
+async function delCard(id){
+  const ok=await confirmDialog('Excluir cartão?','As despesas e pagamentos deste cartão também serão apagados.','Excluir',true);
+  if(!ok) return;
+  S.cards=S.cards.filter(c=>c.id!==id);
+  S.expenses=S.expenses.filter(e=>e.cardId!==id);
+  delete S.invPay[id];
+  popPush(); commit(); toast('Cartão excluído');
+}
+function sheetExpense(cardId,expId){
+  const exp=expId?S.expenses.find(e=>e.id===expId):null;
+  if(!S.cards.length){ toast('Cadastre um cartão primeiro',true); return; }
+  const fixedCard=exp?exp.cardId:cardId;
+  const cardSel=fixedCard||S.cards[0].id;
+  let nVal=exp?exp.n:1;
+  openSheet(`
+    <div class="sh-head"><div class="sh-title">${exp?'Editar despesa':'Nova despesa'}</div>
+      <button class="sh-x" data-act="close-sheet">${icon('x',15)}</button></div>
+    <div class="card">
+      <div class="field"><label>Descrição</label><input type="text" id="ex-desc" maxlength="40" placeholder="Ex.: Passagem aérea" value="${exp?esc(exp.desc):''}"></div>
+      <div class="field"><label>Valor total</label><input class="mi" id="ex-val" inputmode="decimal" placeholder="R$ 0,00" value="${exp?fmtIn(exp.total):''}"></div>
+      <div class="field"><label>Data da compra</label><input type="date" id="ex-date" value="${exp?exp.date:todayStr()}"></div>
+      ${(!fixedCard||exp)?`<div class="field"><label>Cartão</label>
+        <select id="ex-card">${S.cards.map(c=>`<option value="${c.id}" ${c.id===cardSel?'selected':''}>${esc(c.name)}</option>`).join('')}</select></div>`:''}
+    </div>
+    <div class="card">
+      <div class="field"><label>Parcelas</label>
+        <div class="stepper" id="ex-n"><button type="button" data-d="-1">−</button><span class="num">${nVal}</span><button type="button" data-d="1">+</button></div></div>
+      <div class="note in" id="ex-hint"></div>
+    </div>
+    <div class="btns">
+      <button class="btn pri" data-act="save-exp" data-card="${fixedCard||''}" ${exp?`data-id="${exp.id}"`:''}>${exp?'Salvar':'Adicionar despesa'}</button>
+      ${exp?`<button class="btn dang" data-act="del-exp" data-id="${exp.id}">Excluir despesa</button>`:''}
+    </div>`);
+  const hint=()=>{
+    const val=parseMoney($('#ex-val').value)||0;
+    const dt=$('#ex-date').value||todayStr();
+    const cid=$('#ex-card')?$('#ex-card').value:fixedCard;
+    const card=cardById(cid);
+    const h=$('#ex-hint'); if(!h||!card) return;
+    if(val<=0){ h.textContent='Informe o valor para ver a simulação.'; return; }
+    const u=splitInstallments(val,nVal);
+    const cy=purchaseCycle(dt,card.closeDay);
+    const dd=invoiceDates(card,cy);
+    const last=nVal>1?cycAdd(cy,nVal-1):null;
+    h.innerHTML=`<b>${nVal}× de ${fmtV(u[0])}${nVal>1?' • total '+fmtV(val):''}</b><br>
+      1ª parcela na fatura de ${MONTHS[cy.m-1]} — fecha ${fmtDate(ymd(dd.close))}, vence ${fmtDate(ymd(dd.due))}${last?`<br>última parcela em ${MONTHS[last.m-1]}/${last.y}`:''}`;
+  };
+  const num=$('#ex-n .num');
+  $('#ex-n').addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    nVal=Math.max(1,Math.min(48,nVal+ +b.dataset.d));
+    num.textContent=nVal; hint();
+  });
+  $('#ex-val').addEventListener('input',hint);
+  $('#ex-date').addEventListener('change',hint);
+  hint();
+}
+function saveExpenseForm(expId,fixedCard){
+  const desc=$('#ex-desc').value.trim();
+  const val=parseMoney($('#ex-val').value);
+  const date=$('#ex-date').value||todayStr();
+  const n=parseInt($('#ex-n .num').textContent,10)||1;
+  const cid=$('#ex-card')?$('#ex-card').value:(expId?S.expenses.find(e=>e.id===expId).cardId:fixedCard);
+  if(!desc){ toast('Informe a descrição',true); return; }
+  if(!val||val<=0){ toast('Informe o valor total',true); return; }
+  if(!cardById(cid)){ toast('Cartão inválido',true); return; }
+  if(expId){
+    const e=S.expenses.find(x=>x.id===expId);
+    Object.assign(e,{desc,total:r2(val),n,date,cardId:cid});
+    toast('Despesa atualizada');
+  }else{
+    S.expenses.push({id:uid(),cardId:cid,desc,total:r2(val),n,date});
+    toast('Despesa adicionada');
+  }
+  closeSheet(); commit();
+}
+async function delExpense(id){
+  const ok=await confirmDialog('Excluir despesa?','As parcelas dela sairão das faturas. Pagamentos já registrados podem precisar de ajuste.','Excluir',true);
+  if(!ok) return;
+  S.expenses=S.expenses.filter(e=>e.id!==id);
+  closeSheet(); commit(); toast('Despesa excluída');
+}
+
+/* ---------- sheets: pagamento de fatura ---------- */
+function sheetPayInvoice(cardId,key){
+  const card=cardById(cardId); if(!card) return;
+  const inv=findInv(card,key); if(!inv){ toast('Fatura não encontrada',true); return; }
+  openSheet(`
+    <div class="sh-head"><div class="sh-title">Registrar pagamento</div>
+      <button class="sh-x" data-act="close-sheet">${icon('x',15)}</button></div>
+    <div class="card">
+      <div class="row"><div class="grow"><div class="t">Fatura de ${MONTHS[inv.cyc.m-1]} de ${inv.cyc.y}</div>
+        <div class="s">${esc(card.name)} • falta ${fmtV(inv.rest)}</div></div></div>
+      <div class="field"><label>Data</label><input type="date" id="pi-date" value="${todayStr()}"></div>
+      <div class="field"><label>Valor pago</label><input class="mi" id="pi-amt" inputmode="decimal" value="${fmtIn(inv.rest)}"></div>
+    </div>
+    ${inv.status==='current'||inv.status==='future'?'<div class="note">Esta fatura ainda está aberta — o valor final pode mudar até o fechamento.</div>':''}
+    <div class="btns"><button class="btn pri" data-act="save-pay-inv" data-id="${cardId}" data-key="${key}">Salvar pagamento</button></div>`);
+}
+function saveInvoicePayment(cardId,key){
+  const card=cardById(cardId); if(!card) return;
+  const date=$('#pi-date').value||todayStr();
+  const amount=parseMoney($('#pi-amt').value);
+  if(!amount||amount<=0){ toast('Informe um valor válido',true); return; }
+  (S.invPay[cardId]=S.invPay[cardId]||{});
+  (S.invPay[cardId][key]=S.invPay[cardId][key]||[]).push({date,amount});
+  closeSheet(); commit(); toast('Pagamento registrado');
+}
+async function delInvoicePayment(cardId,key,i){
+  const ok=await confirmDialog('Remover pagamento?','O valor voltará a constar como não pago nesta fatura.','Remover',true);
+  if(!ok) return;
+  S.invPay[cardId][key].splice(i,1);
+  if(!S.invPay[cardId][key].length) delete S.invPay[cardId][key];
+  commit(); toast('Pagamento removido');
+}
+
+/* ---------- backup ---------- */
+async function exportBackup(){
+  S.lastBackup=Date.now(); save();
+  const name='carteira-backup-'+todayStr()+'.json';
+  const blob=new Blob([JSON.stringify(S)],{type:'application/json'});
+  try{
+    const file=new File([blob],name,{type:'application/json'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      await navigator.share({files:[file],title:'Backup Carteira'});
+      toast('Backup compartilhado'); refresh(); return;
+    }
+  }catch(e){}
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=name;
+  document.body.appendChild(a); a.click(); a.remove();
+  toast('Backup exportado'); refresh();
+}
+const importFile=$('#importFile');
+importFile.addEventListener('change',async ()=>{
+  const f=importFile.files[0]; importFile.value='';
+  if(!f) return;
+  try{
+    const j=JSON.parse(await f.text());
+    if(!j||!j.fin||!j.fin.contract||!Array.isArray(j.cards)||!Array.isArray(j.expenses)) throw new Error('inválido');
+    const ok=await confirmDialog('Importar backup?','Todos os dados atuais serão substituídos pelo conteúdo do arquivo.','Importar',true);
+    if(!ok) return;
+    S=j; if(!S.invPay) S.invPay={};
+    S.lastBackup=Date.now();
+    clearStack(); closeSheet(); save(); refresh();
+    toast('Backup restaurado');
+  }catch(e){ toast('Arquivo de backup inválido',true); }
+});
+async function wipeAll(){
+  const ok=await confirmDialog('Apagar todos os dados?','O app volta ao estado inicial: financiamento pré-cadastrado e nenhum cartão ou despesa.','Apagar',true);
+  if(!ok) return;
+  S=defaultState();
+  clearStack(); closeSheet(); save(); refresh();
+  toast('Dados apagados');
+}
+
+/* ---------- swipe-para-excluir ---------- */
+const SW_W=80;
+function closeAllSwipes(){
+  $$('.swipe-row.open').forEach(r=>{
+    r.classList.remove('open');
+    const c=r.querySelector('.sw-c'); if(c){ c.style.transform=''; }
+  });
+}
+function attachSwipe(row){
+  const c=row.querySelector('.sw-c');
+  if(!c||c._swiped) return; c._swiped=true;
+  let sx=0,sy=0,base=0,dx=0,horiz=null,active=false;
+  c.addEventListener('pointerdown',e=>{
+    if(e.pointerType==='mouse'&&e.button!==0) return;
+    active=true; horiz=null; sx=e.clientX; sy=e.clientY; dx=0;
+    base=row.classList.contains('open')?-SW_W:0;
+  });
+  c.addEventListener('pointermove',e=>{
+    if(!active) return;
+    const mx=e.clientX-sx, my=e.clientY-sy;
+    if(horiz===null){
+      if(Math.abs(mx)<6&&Math.abs(my)<6) return;
+      horiz=Math.abs(mx)>Math.abs(my);
+      if(!horiz){ active=false; return; }
+    }
+    dx=Math.max(-SW_W-30,Math.min(0,base+mx));
+    c.style.transition='none';
+    c.style.transform=`translateX(${dx}px)`;
+  });
+  const end=e=>{
+    if(!active) return; active=false;
+    c.style.transition='';
+    const open=dx<-SW_W*0.45;
+    c.style.transform=open?`translateX(-${SW_W}px)`:'';
+    row.classList.toggle('open',open);
+    if(open){
+      $$('.swipe-row.open').forEach(r=>{
+        if(r!==row){ r.classList.remove('open'); const cc=r.querySelector('.sw-c'); if(cc) cc.style.transform=''; }
+      });
+    }
+    if(Math.abs(e.clientX-sx)>8||Math.abs(e.clientY-sy)>8) suppressClick=true;
+    dx=0;
+  };
+  c.addEventListener('pointerup',end);
+  c.addEventListener('pointercancel',end);
+}
+
+/* ---------- gesto de voltar arrastando da borda (push screens) ---------- */
+let edge=null;
+stack.addEventListener('pointerdown',e=>{
+  if(!stack.children.length||e.clientX>28) return;
+  const el=stack.lastElementChild;
+  edge={el,x:e.clientX,y:e.clientY,tx:0,ok:false};
+  el.style.transition='none';
+});
+stack.addEventListener('pointermove',e=>{
+  if(!edge) return;
+  const dx=e.clientX-edge.x, dy=e.clientY-edge.y;
+  if(!edge.ok){
+    if(Math.abs(dx)<8&&Math.abs(dy)<8) return;
+    if(Math.abs(dx)<=Math.abs(dy)){ edge.el.style.transition=''; edge=null; return; }
+    edge.ok=true;
+  }
+  edge.tx=Math.max(0,dx);
+  edge.el.style.transform=`translateX(${edge.tx}px)`;
+});
+const edgeEnd=()=>{
+  if(!edge) return;
+  const el=edge.el;
+  el.style.transition='';
+  if(edge.tx>90) popPush();
+  else el.style.transform='';
+  edge=null;
+};
+stack.addEventListener('pointerup',edgeEnd);
+stack.addEventListener('pointercancel',edgeEnd);
+
+/* ---------- delegação de eventos ---------- */
+document.addEventListener('click',e=>{
+  if(suppressClick){ suppressClick=false; e.stopPropagation(); e.preventDefault(); return; }
+  const openRow=e.target.closest('.swipe-row.open');
+  if(openRow&&!e.target.closest('[data-act="del-exp"]')){
+    openRow.classList.remove('open');
+    const c=openRow.querySelector('.sw-c'); if(c) c.style.transform='';
+    e.stopPropagation(); e.preventDefault(); return;
+  }
+  const t=e.target.closest('[data-act]');
+  if(!t) return;
+  const a=t.dataset.act, d=t.dataset;
+  (async ()=>{
+    try{
+      switch(a){
+        case 'close-sheet': closeSheet(); break;
+        case 'tab': switchTab(d.tab); break;
+        case 'pop': popPush(); break;
+        case 'inst': openPaySheet(+d.n); break;
+        case 'save-inst': saveInstallment(+d.n); break;
+        case 'del-inst': removeInstPay(+d.n); break;
+        case 'settle': sheetSettle(); break;
+        case 'settle-reg': sheetSettleApply(); break;
+        case 'settle-do': doSettle(); break;
+        case 'contract': sheetContract(); break;
+        case 'edit-contract': sheetEditContract(); break;
+        case 'save-contract': saveContractEdit(); break;
+        case 'new-card': sheetNewCard(); break;
+        case 'save-card': saveCardForm(d.id||null); break;
+        case 'card': pushCardDetail(d.id); break;
+        case 'card-menu': {
+          const i=await actionSheet(null,[{label:'Editar cartão'},{label:'Excluir cartão',danger:true}]);
+          if(i===0) sheetNewCard(cardById(d.id));
+          else if(i===1) delCard(d.id);
+          break;
+        }
+        case 'invoice': pushInvoice(d.id,d.key); break;
+        case 'pay-inv': sheetPayInvoice(d.id,d.key); break;
+        case 'save-pay-inv': saveInvoicePayment(d.id,d.key); break;
+        case 'del-pay': delInvoicePayment(d.id,d.key,+d.i); break;
+        case 'new-exp': sheetExpense(d.card||null); break;
+        case 'edit-exp': sheetExpense(null,d.id); break;
+        case 'save-exp': saveExpenseForm(d.id||null,d.card||null); break;
+        case 'del-exp': delExpense(d.id); break;
+        case 'export': exportBackup(); break;
+        case 'import': importFile.click(); break;
+        case 'wipe': wipeAll(); break;
+      }
+    }catch(err){ toast('Algo deu errado: '+err.message,true); }
+  })();
+});
+
+/* ---------- PWA: ícone, manifest e service worker ---------- */
+function setupPWA(){
+  try{
+    const c=document.createElement('canvas'); c.width=c.height=180;
+    const x=c.getContext('2d');
+    const rr=(cx,cy,w,h,r)=>{ x.beginPath(); x.moveTo(cx+r,cy); x.arcTo(cx+w,cy,cx+w,cy+h,r); x.arcTo(cx+w,cy+h,cx,cy+h,r); x.arcTo(cx,cy+h,cx,cy,r); x.arcTo(cx,cy,cx+w,cy,r); x.closePath(); };
+    x.fillStyle='#0E7C5C'; x.fillRect(0,0,180,180);
+    x.strokeStyle='#FFFFFF'; x.fillStyle='#FFFFFF';
+    x.lineWidth=12; x.lineJoin='round'; x.lineCap='round';
+    rr(36,62,108,80,18); x.stroke();
+    x.lineWidth=10;
+    x.beginPath(); x.moveTo(46,88); x.lineTo(134,88); x.stroke();
+    x.beginPath(); x.arc(122,108,10,0,Math.PI*2); x.fill();
+    const url=c.toDataURL('image/png');
+    const apple=document.createElement('link'); apple.rel='apple-touch-icon'; apple.href=url; document.head.appendChild(apple);
+    const fav=document.createElement('link'); fav.rel='icon'; fav.href=url; document.head.appendChild(fav);
+    const man={
+      name:'Carteira', short_name:'Carteira', display:'standalone',
+      start_url:location.origin+location.pathname,
+      background_color:'#F2F2F7', theme_color:'#F2F2F7',
+      icons:[{src:url,sizes:'180x180',type:'image/png'}]
+    };
+    const mlink=document.createElement('link'); mlink.rel='manifest';
+    mlink.href=URL.createObjectURL(new Blob([JSON.stringify(man)],{type:'application/manifest+json'}));
+    document.head.appendChild(mlink);
+  }catch(e){}
+  if('serviceWorker' in navigator)
+    addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+
+/* ---------- inicialização ---------- */
+['home','fin','cards','set'].forEach(t=>{
+  const sc=$('#scroll-'+t), nv=$('#nav-'+t);
+  sc.addEventListener('scroll',()=>nv.classList.toggle('lif',sc.scrollTop>24),{passive:true});
+});
+document.addEventListener('touchstart',()=>{},{passive:true});
+setupPWA();
+switchTab('home');
+updateBadges();
+</script>
+</body>
+</html>
