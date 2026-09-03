@@ -94,6 +94,15 @@ h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padd
 .kv .k{font-size:13.5px;color:var(--sec);flex:0 0 auto;max-width:46%}
 .kv .v{font-size:14.5px;font-weight:500;text-align:right;word-break:break-word}
 
+/* logos de emissores (estilizadas, offline) */
+.logo{display:flex;align-items:center;justify-content:center;font-weight:800;letter-spacing:-.02em;flex:0 0 auto;white-space:nowrap;overflow:hidden}
+.iss-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 8px;padding:12px 16px 14px}
+.iss{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:0}
+.iss .logo{transition:box-shadow .15s}
+.iss.on .logo{box-shadow:0 0 0 2.5px var(--card),0 0 0 4.5px var(--tint)}
+.iss .nm{font-size:10px;color:var(--sec);text-align:center;line-height:1.15;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.iss.on .nm{color:var(--tint);font-weight:600}
+
 /* hero / blocos de destaque */
 .hero{padding:18px 16px 16px}
 .lbl{font-size:13px;color:var(--sec)}
@@ -107,7 +116,6 @@ h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padd
 .ticks{display:flex;gap:2.5px;padding:14px 16px 8px;flex-wrap:wrap}
 .tick{flex:1 0 3px;height:14px;border-radius:3.5px;background:var(--fill)}
 .tick.p{background:var(--tint)}
-.tick.a{background:var(--amber)}
 .tick.l{background:var(--red)}
 .tlegend{display:flex;gap:16px;padding:0 16px 12px;font-size:12px;color:var(--sec)}
 
@@ -161,8 +169,6 @@ h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padd
 .tl-date .m{font-size:10.5px;color:var(--sec);text-transform:uppercase;letter-spacing:.05em}
 .tl-dot{width:8px;height:8px;border-radius:99px;background:var(--tint);flex:0 0 8px}
 .tl-dot.red{background:var(--red)}
-.tl-dot.amb{background:var(--amber)}
-.tl-dot.gr{background:var(--ter)}
 
 /* swipe-para-excluir */
 .swipe-row{position:relative;overflow:hidden}
@@ -334,14 +340,54 @@ const ICONS={
   share:'<path d="M12 14V3.5"/><path d="M8.5 6.5 12 3l3.5 3.5"/><path d="M7.5 10.5H6a2 2 0 0 0-2 2V19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6.5a2 2 0 0 0-2-2h-1.5"/>',
   doc:'<path d="M6.5 3h7.5l4 4v14h-11.5z"/><path d="M14 3v4h4"/><path d="M9.5 12.5h5M9.5 16h5"/>',
   dots:'<circle cx="5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.7" fill="currentColor" stroke="none"/>',
-  alert:'<circle cx="12" cy="12" r="9"/><path d="M12 7.5v5"/><circle cx="12" cy="16.2" r="1" fill="currentColor" stroke="none"/>'
+  alert:'<circle cx="12" cy="12" r="9"/><path d="M12 7.5v5"/><circle cx="12" cy="16.2" r="1" fill="currentColor" stroke="none"/>',
+  pencil:'<path d="M4.5 19.5l1-4L16 5a2.12 2.12 0 0 1 3 3L8.5 18.5l-4 1z"/><path d="M14.5 6.5l3 3"/>'
 };
 const icon=(n,s=22)=>`<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[n]}</svg>`;
 
+/* ---------- emissores: logos estilizadas (offline) ---------- */
+const COLORS=['#0E7C5C','#33475B','#7C3A38','#7E5B22','#33363C','#44523D'];
+const ISSUERS=[
+  {k:'nubank',   n:'Nubank',          bg:'#820AD1',fg:'#fff',t:'nu'},
+  {k:'itau',     n:'Itaú',            bg:'#EC7000',fg:'#fff',t:'itaú'},
+  {k:'bradesco', n:'Bradesco',        bg:'#CC092F',fg:'#fff',t:'bradesco'},
+  {k:'bb',       n:'Banco do Brasil', bg:'#FFDC00',fg:'#0A2C5E',t:'BB'},
+  {k:'caixa',    n:'Caixa',           bg:'#005CA9',fg:'#fff',t:'caixa'},
+  {k:'santander',n:'Santander',       bg:'#EA1D2C',fg:'#fff',t:'Santander'},
+  {k:'c6',       n:'C6 Bank',         bg:'#1C1E24',fg:'#fff',t:'c6'},
+  {k:'inter',    n:'Inter',           bg:'#FF7A00',fg:'#111318',t:'i'},
+  {k:'mp',       n:'Mercado Pago',    bg:'#009EE3',fg:'#fff',t:'MP'},
+  {k:'picpay',   n:'PicPay',          bg:'#21C25E',fg:'#fff',t:'P'},
+  {k:'original', n:'Original',        bg:'#1C1E24',fg:'#fff',t:'O'},
+  {k:'btg',      n:'BTG+',            bg:'#0A2C5E',fg:'#F7C600',t:'btg+'},
+  {k:'neon',     n:'Neon',            bg:'#1C1E24',fg:'#2BE0FF',t:'N'},
+  {k:'next',     n:'Next',            bg:'#1D5CFF',fg:'#fff',t:'next'},
+  {k:'will',     n:'will bank',       bg:'#21D07A',fg:'#06281C',t:'w'}
+];
+const ISSUER_MATCH={
+  nubank:['nubank'],itau:['itaú','itau'],bradesco:['bradesco'],bb:['banco do brasil'],
+  caixa:['caixa','cef'],santander:['santander'],c6:['c6'],inter:['inter'],
+  mp:['mercado pago','mercadopago'],picpay:['picpay'],original:['original'],
+  btg:['btg'],neon:['neon'],next:['next'],will:['will']
+};
+function detectIssuer(str){
+  const s=(str||'').toLowerCase(); if(!s) return null;
+  for(const k in ISSUER_MATCH){ if(ISSUER_MATCH[k].some(t=>s.includes(t))) return k; }
+  return null;
+}
+const tileFs=(t,px)=>{const l=t.length;const f=l<=2?.42:l<=3?.34:l<=5?.26:l<=6?.22:.19;return (px*f).toFixed(1);};
+const issOf=c=>ISSUERS.find(i=>i.k===c.issuerKey);
+function logoTile(c,px=36){
+  const i=issOf(c), br=(px*.26).toFixed(1);
+  if(i) return `<span class="logo" style="width:${px}px;height:${px}px;border-radius:${br}px;background:${i.bg};color:${i.fg};font-size:${tileFs(i.t,px)}px">${i.t}</span>`;
+  const nm=(c.issuer||c.name||'cartão').trim();
+  return `<span class="logo" style="width:${px}px;height:${px}px;border-radius:${br}px;background:${c.color||'#8E8E93'};color:#fff;font-size:${(px*.4).toFixed(1)}px">${esc(nm.charAt(0).toUpperCase())}</span>`;
+}
+const issuerName=c=>{ const i=issOf(c); return i?i.n:(c.issuer||''); };
+const logoColor=c=>{ const i=issOf(c); return i?i.bg:(c.color||'#8E8E93'); };
+
 /* ---------- estado + semente (contrato Santander do anexo) ---------- */
 const LS='carteira.v1';
-const COLORS=['#0E7C5C','#33475B','#7C3A38','#7E5B22','#33363C','#44523D'];
-
 function genInstallments(c){
   const [y,m,d]=c.firstDue.split('-').map(Number), arr=[];
   for(let i=1;i<=c.n;i++) arr.push({n:i, due:ymd(new Date(y,m-1+i-1,d)), nominal:r2(c.pmt)});
@@ -363,27 +409,34 @@ function defaultState(){
   s.fin.installments=genInstallments(contract);
   return s;
 }
+/* migração de dados antigos: desconto vira automático; cartões ganham logo pelo nome */
+function migrate(s){
+  (s.fin&&s.fin.installments||[]).forEach(it=>{
+    if(it.paid) it.paid.discount=r2(Math.max(0,it.nominal-it.paid.amount));
+  });
+  (s.cards||[]).forEach(c=>{
+    if(!c.issuerKey){ const k=detectIssuer((c.issuer||'')+' '+(c.name||'')); if(k) c.issuerKey=k; }
+  });
+  if(!s.invPay) s.invPay={};
+  return s;
+}
 let S;
 try{ S=JSON.parse(localStorage.getItem(LS)) || defaultState(); }catch(e){ S=defaultState(); }
 if(!S.fin||!S.fin.installments) S=defaultState();
+migrate(S);
 function save(){ S.updatedAt=Date.now(); try{ localStorage.setItem(LS,JSON.stringify(S)); }catch(e){} }
 
 /* ---------- Módulo 1: lógica do financiamento ---------- */
+/* modelo: parcela com pagamento registrado = quitada; desconto = nominal − pago (automático) */
 function instState(it){
-  if(!it.paid) return 'open';
-  return (it.paid.amount + (it.paid.discount||0) + 0.005 >= it.nominal) ? 'paid' : 'partial';
+  return (it.paid && it.paid.amount>0.005) ? 'paid' : 'open';
 }
 function finStats(){
   const ins=S.fin.installments;
   let paid=0,paidAmt=0,disc=0,late=0,next=null,openRest=0;
   ins.forEach(it=>{
-    const st=instState(it);
-    if(st==='paid'){ paid++; paidAmt+=it.paid.amount; disc+=r2(it.nominal-it.paid.amount); }
-    else{
-      openRest+=r2(it.nominal-(it.paid?it.paid.discount+it.paid.amount:0));
-      if(!next) next=it;
-      if(daysTo(it.due)<0) late++;
-    }
+    if(instState(it)==='paid'){ paid++; paidAmt+=it.paid.amount; disc+=(it.paid.discount||0); }
+    else{ openRest+=it.nominal; if(!next) next=it; if(daysTo(it.due)<0) late++; }
   });
   return {count:ins.length,paid,paidAmt:r2(paidAmt),disc:r2(disc),late,next,openRest:r2(openRest)};
 }
@@ -401,8 +454,8 @@ function regenerateInstallments(){
 }
 function applySettle(val,date){
   const open=S.fin.installments.filter(i=>instState(i)!=='paid');
-  const sum=r2(open.reduce((s,i)=>s+i.nominal,0));
   if(!open.length) return;
+  const sum=r2(open.reduce((s,i)=>s+i.nominal,0));
   const ratio=sum>0?val/sum:0; let acc=0;
   open.forEach((it,idx)=>{
     let amt = idx===open.length-1 ? r2(val-acc) : r2(it.nominal*ratio);
@@ -504,8 +557,7 @@ function upcomingEvents(){
   S.fin.installments.forEach(it=>{
     if(instState(it)==='paid') return;
     const d=+pD(it.due); if(d>H) return;
-    evs.push({t:d,kind:d<t0?'late':'fin',title:'Parcela '+it.n+' • Financiamento',
-      val:r2(it.nominal-(it.paid?it.paid.discount+it.paid.amount:0)),act:'inst',n:it.n});
+    evs.push({t:d,kind:d<t0?'late':'fin',title:'Parcela '+it.n+' • Financiamento',val:it.nominal,act:'inst',n:it.n});
   });
   S.cards.forEach(c=>cardCycles(c).forEach(cy=>{
     const inv=invoiceCalc(c,cy); if(inv.status==='empty') return;
@@ -525,7 +577,7 @@ function monthCommitments(){
   S.fin.installments.forEach(it=>{
     if(instState(it)==='paid') return;
     const d=pD(it.due);
-    if(d.getMonth()===m&&d.getFullYear()===y){ total+=r2(it.nominal-(it.paid?it.paid.discount+it.paid.amount:0)); finN++; }
+    if(d.getMonth()===m&&d.getFullYear()===y){ total+=it.nominal; finN++; }
   });
   S.cards.forEach(c=>cardCycles(c).forEach(cy=>{
     const inv=invoiceCalc(c,cy);
@@ -650,8 +702,7 @@ function closeSheet(){
 
 /* ---------- renderização: Início ---------- */
 function tickEl(it){
-  const st=instState(it);
-  const cls=st==='paid'?'p':st==='partial'?'a':(daysTo(it.due)<0?'l':'');
+  const cls=instState(it)==='paid'?'p':(daysTo(it.due)<0?'l':'');
   return `<i class="tick ${cls}"></i>`;
 }
 function renderHomeInto(pg){
@@ -687,7 +738,7 @@ function homeFinCard(fs,c){
     <div class="tlegend"><span>${fs.paid}/${fs.count} quitadas</span>${fs.late?`<span class="red">${fs.late} atrasadas</span>`:''}</div>
     <div class="krow">
       <div><div class="k">Pago</div><div class="v">${fmtV(fs.paidAmt)}</div></div>
-      <div><div class="k">Economia</div><div class="v tint">${fmtV(fs.disc)}</div></div>
+      <div><div class="k">Descontos</div><div class="v tint">${fmtV(fs.disc)}</div></div>
       <div><div class="k">Restante</div><div class="v">${fmtV(fs.openRest)}</div></div>
     </div>
     ${next?`<div class="row"><div class="grow"><div class="t">Próxima • parcela ${next.n}</div><div class="s">${fmtDate(next.due)} • ${fmtV(next.nominal)}</div></div>
@@ -718,7 +769,7 @@ function homeCardsCard(){
     ${S.cards.map(c=>{
       const nd=nextPendingInvoice(c);
       return `<div class="row press" data-act="card" data-id="${c.id}">
-        <span class="dot" style="background:${c.color}"></span>
+        ${logoTile(c,34)}
         <div class="grow"><div class="t">${esc(c.name)}</div><div class="s">${nd?'vence '+fmtDate(nd.due):'sem faturas pendentes'}</div></div>
         <div class="val sm">${nd?fmtV(nd.rest):'—'}</div>
       </div>`;}).join('')}
@@ -732,10 +783,16 @@ function upcomingList(){
     const act=ev.act==='inst'?`data-act="inst" data-n="${ev.n}"`
       :ev.act==='card'?`data-act="card" data-id="${ev.id}"`
       :ev.act==='invoice'?`data-act="invoice" data-id="${ev.id}" data-key="${ev.key}"`:'';
-    const dot=ev.kind==='fin'?'':(ev.kind==='late'||ev.kind==='due')?'red':(ev.kind==='close'?'gr':'amb');
+    let marker;
+    if(ev.act==='inst') marker=`<span class="tl-dot${ev.kind==='late'?' red':''}"></span>`;
+    else{
+      const cc=cardById(ev.id);
+      const ring=ev.kind==='late'?';box-shadow:0 0 0 2px var(--card),0 0 0 3.5px var(--red)':'';
+      marker=cc?`<span class="tl-dot" style="background:${logoColor(cc)}${ring}"></span>`:'<span class="tl-dot"></span>';
+    }
     return `<div class="row press" ${act}>
       <div class="tl-date"><div class="d">${d.getDate()}</div><div class="m">${MON[d.getMonth()]}</div></div>
-      <span class="tl-dot ${dot}"></span>
+      ${marker}
       <div class="grow"><div class="t">${esc(ev.title)}</div></div>
       <div class="val">${fmtV(ev.val)}</div>
     </div>`;}).join('')}</div>`;
@@ -746,14 +803,11 @@ function renderFinInto(pg){
   const c=S.fin.contract, fs=finStats(), v=c.vehicle;
   const instRow=it=>{
     const st=instState(it), late=st!=='paid'&&daysTo(it.due)<0;
-    let right='',sub=fmtDate(it.due),cls='';
+    let right,sub=fmtDate(it.due),cls='';
     if(st==='paid'){
-      const eco=r2(it.nominal-it.paid.amount);
+      const d=r2(it.paid.discount||0);
       right=`<div class="val tint">${fmtV(it.paid.amount)}</div>`;
-      sub=`pago em ${fmtDate(it.paid.date)}${eco>0.005?' • economizou '+fmtV(eco):''}`;
-    }else if(st==='partial'){
-      right=`<div class="val">${fmtV(it.nominal)}</div>`;
-      sub=`parcial • falta ${fmtV(r2(it.nominal-it.paid.discount-it.paid.amount))}`;
+      sub=`pago em ${fmtDate(it.paid.date)}${d>0.005?' • desconto '+fmtV(d):''}`;
     }else{
       right=`<div class="val">${fmtV(it.nominal)}</div>`;
       if(late){ sub=relDue(it.due); cls='red'; }
@@ -773,7 +827,7 @@ function renderFinInto(pg){
       <div class="tlegend"><span>${fs.paid}/${fs.count} quitadas</span>${fs.late?`<span class="red">${fs.late} atrasadas</span>`:''}</div>
       <div class="krow">
         <div><div class="k">Total pago</div><div class="v">${fmtV(fs.paidAmt)}</div></div>
-        <div><div class="k">Economia com descontos</div><div class="v tint">${fmtV(fs.disc)}</div></div>
+        <div><div class="k">Descontos obtidos</div><div class="v tint">${fmtV(fs.disc)}</div></div>
         <div><div class="k">Restante</div><div class="v">${fmtV(fs.openRest)}</div></div>
         <div><div class="k">Juros embutidos no contrato</div><div class="v">${fmtV(r2(c.totalPaid-c.financed))}</div></div>
       </div>
@@ -790,7 +844,7 @@ function renderFinInto(pg){
     </div>`:`
     <div class="card"><div class="finv"><div class="lbl">Financiamento quitado</div>
       <div class="big sm tint">${icon('check',28)}</div>
-      <div class="s">Total pago ${fmtV(fs.paidAmt)} • economia de ${fmtV(fs.disc)} com descontos</div></div></div>`}
+      <div class="s">Total pago ${fmtV(fs.paidAmt)} • descontos somaram ${fmtV(fs.disc)}</div></div></div>`}
     <div class="sec-h">Contrato</div>
     <div class="card">
       <div class="row"><div class="grow"><div class="t">${esc(v.brand)} ${esc(v.model)}</div><div class="s">${v.year} • ${esc(v.color)} • placa ${v.plate}</div></div></div>
@@ -816,16 +870,15 @@ function renderCardsInto(pg){
       <div class="s">Toque no + acima para cadastrar um cartão de crédito com limite, fechamento e vencimento</div></div></div>`}`;
 }
 function cardCard(c){
-  const curKey=cycKey(currentOpenCycle(c));
-  const cyc=cardCycles(c).find(x=>x.key===curKey);
+  const cyc=cardCycles(c).find(x=>x.key===cycKey(currentOpenCycle(c)));
   const inv=invoiceCalc(c,cyc);
   const u=cardUsage(c);
   const pct=c.limit?Math.min(100,Math.round(u.used/c.limit*100)):0;
   const p=pillFor(inv.status);
   return `<div class="card press" data-act="card" data-id="${c.id}">
     <div class="row">
-      <span class="dot" style="background:${c.color}"></span>
-      <div class="grow"><div class="t">${esc(c.name)}</div><div class="s">${esc(c.issuer||'')}</div></div>
+      ${logoTile(c,38)}
+      <div class="grow"><div class="t">${esc(c.name)}</div><div class="s">${esc(issuerName(c))}</div></div>
       <span class="pill ${p.cls}">${p.txt}</span>
     </div>
     <div class="finv">
@@ -842,7 +895,8 @@ function cardCard(c){
 function pushCardDetail(id){
   if(!cardById(id)) return;
   const el=pushScreen(esc(cardById(id).name),'Cartões',
-    `<button class="nb-ic" data-act="card-menu" data-id="${id}" aria-label="Opções">${icon('dots',20)}</button>`);
+    `<button class="nb-ic" data-act="edit-card" data-id="${id}" aria-label="Editar cartão">${icon('pencil',19)}</button>
+     <button class="nb-ic" data-act="card-menu" data-id="${id}" aria-label="Mais opções">${icon('dots',20)}</button>`);
   el._update=()=>{ const c=cardById(id); if(!c){popPush();return;} renderCardDetailInto(el,c); };
   el._update();
 }
@@ -858,8 +912,13 @@ function renderCardDetailInto(el,c){
   const exps=S.expenses.filter(e=>e.cardId===c.id).slice().reverse();
   pg.innerHTML=`
     <div class="card">
+      <div class="row" style="padding-bottom:4px">
+        ${logoTile(c,40)}
+        <div class="grow"><div class="t">${esc(c.name)}</div>
+          <div class="s">${esc(issuerName(c))} • fecha dia ${c.closeDay} • vence dia ${c.dueDay}</div></div>
+      </div>
       <div class="limb"><div class="lbl">Disponível</div><div class="big">${fmtV(u.avail)}</div>
-        <div class="s">de ${fmtV(c.limit)}${c.issuer?' • '+esc(c.issuer):''}</div></div>
+        <div class="s">de ${fmtV(c.limit)} de limite</div></div>
       <div class="bar${u.used>c.limit?' bad':(pct>70?' warn':'')}"><i style="width:${pct}%"></i></div>
       <div class="krow">
         <div><div class="k">Utilizado</div><div class="v">${fmtV(u.used)}</div></div>
@@ -884,7 +943,19 @@ function renderCardDetailInto(el,c){
     <div class="sec-h"><span>Despesas</span><button class="lnk" data-act="new-exp" data-card="${c.id}">Adicionar</button></div>
     ${exps.length?`<div class="card">${exps.map(expenseRow).join('')}</div>`:
     `<div class="card"><div class="empty sm">${icon('card',36)}<div class="s">Nenhuma despesa neste cartão — toque em Adicionar para lançar uma compra parcelada</div></div></div>`}
-    <p class="foot">Deslize uma despesa para a esquerda para excluir</p>`;
+    <div class="sec-h">Gerenciar</div>
+    <div class="card">
+      <div class="row press" data-act="edit-card" data-id="${c.id}">
+        <div class="icb">${icon('pencil',17)}</div>
+        <div class="grow"><div class="t">Editar cartão</div><div class="s">Nome, limite, banco, datas e cor</div></div>
+        <span class="chev">${icon('chev',16)}</span>
+      </div>
+      <div class="row press" data-act="del-card" data-id="${c.id}">
+        <div class="icb" style="background:var(--red-bg);color:var(--red)">${icon('trash',17)}</div>
+        <div class="grow"><div class="t red">Excluir cartão e histórico</div><div class="s">Remove despesas, faturas e pagamentos</div></div>
+      </div>
+    </div>
+    <p class="foot">Deslize uma despesa para a esquerda para excluí-la</p>`;
   pg.parentElement.scrollTop=st;
   pg.querySelectorAll('.swipe-row').forEach(attachSwipe);
 }
@@ -976,71 +1047,96 @@ function renderSettingsInto(pg){
     </div>
     <div class="sec-h">Sobre</div>
     <div class="card">
-      <div class="kv"><span class="k">Carteira</span><span class="v">versão 1.0</span></div>
+      <div class="kv"><span class="k">Carteira</span><span class="v">versão 1.1</span></div>
       <div class="kv"><span class="k">Armazenamento</span><span class="v">somente neste aparelho (offline)</span></div>
     </div>
     <p class="foot">Nada é enviado à internet — exporte backups com frequência</p>`;
 }
 
-/* ---------- sheets: pagamento de parcela ---------- */
+/* ---------- sheets: pagamento de parcela (desconto automático) ---------- */
 function openPaySheet(n){
-  const ins=S.fin.installments, it=ins.find(x=>x.n===n);
-  if(!it) return;
-  const idx=ins.indexOf(it);
-  const maxRep=Math.min(12,ins.slice(idx+1).filter(x=>instState(x)!=='paid').length);
-  const p=it.paid;
+  const ins=S.fin.installments, idx=ins.findIndex(x=>x.n===n);
+  if(idx<0) return;
+  const it=ins[idx], p=it.paid;
+  const maxN=1+ins.slice(idx+1).filter(x=>instState(x)!=='paid').length;
+  let qty=1, touched=false;
   openSheet(`
     <div class="sh-head"><div class="sh-title">Parcela ${it.n} de ${ins.length}</div>
       <button class="sh-x" data-act="close-sheet">${icon('x',15)}</button></div>
     <div class="card">
-      <div class="field"><label>Vencimento</label><input type="date" id="ip-due" value="${it.due}"></div>
       <div class="field"><label>Valor da parcela</label><input class="mi" id="ip-nom" inputmode="decimal" value="${fmtIn(it.nominal)}"></div>
+      <div class="field"><label>Vencimento</label><input type="date" id="ip-due" value="${it.due}"></div>
       <div class="field"><label>Data do pagamento</label><input type="date" id="ip-date" value="${p?p.date:todayStr()}"></div>
-      <div class="field"><label>Valor pago</label><input class="mi" id="ip-amt" inputmode="decimal" placeholder="R$ 0,00" value="${p?fmtIn(p.amount):fmtIn(it.nominal)}"></div>
-      <div class="field"><label>Desconto obtido</label><input class="mi" id="ip-disc" inputmode="decimal" placeholder="R$ 0,00" value="${p?fmtIn(p.discount):''}"></div>
     </div>
-    ${maxRep>0?`<div class="card">
-      <div class="field"><label>Aplicar também às próximas</label>
-        <div class="stepper" id="ip-rep"><button type="button" data-d="-1">−</button><span class="num">0</span><button type="button" data-d="1">+</button></div></div>
-      <div class="note in">Use ao pagar várias parcelas de uma vez (antecipação) — mesma data, valor e desconto nas parcelas seguintes. Os descontos são somados nas estatísticas.</div>
+    ${maxN>1?`<div class="card">
+      <div class="field"><label>Parcelas incluídas</label>
+        <div class="stepper" id="ip-rep"><button type="button" data-d="-1">−</button><span class="num">1</span><button type="button" data-d="1">+</button></div></div>
+      <div class="note in">Antecipação: inclua várias parcelas quando quitar mais de uma de uma só vez. O valor total pago é dividido entre elas.</div>
     </div>`:''}
-    <div class="note">A parcela fica liquidada quando valor pago + desconto ≥ valor nominal.</div>
+    <div class="card">
+      <div class="field"><label>Valor total pago</label><input class="mi" id="ip-amt" inputmode="decimal" placeholder="R$ 0,00" value="${p?fmtIn(p.amount):fmtIn(it.nominal)}"></div>
+    </div>
+    <div class="note" id="ip-hint"></div>
     <div class="btns">
       <button class="btn pri" data-act="save-inst" data-n="${it.n}">Salvar</button>
       ${p?`<button class="btn dang" data-act="del-inst" data-n="${it.n}">Remover pagamento</button>`:''}
     </div>`);
-  const stp=$('#ip-rep');
-  if(stp){
-    let rep=0; const num=stp.querySelector('.num');
-    stp.addEventListener('click',e=>{
-      const b=e.target.closest('button'); if(!b) return;
-      rep=Math.max(0,Math.min(maxRep,rep+ +b.dataset.d));
-      num.textContent=rep;
-    });
-  }
+  const selected=()=>{
+    const out=[ins[idx]]; let j=idx+1;
+    while(out.length<qty&&j<ins.length){ if(instState(ins[j])!=='paid') out.push(ins[j]); j++; }
+    return out;
+  };
+  const sumSel=()=>{
+    const nom=parseMoney($('#ip-nom').value)||it.nominal;
+    return r2(nom+selected().slice(1).reduce((s,x)=>s+x.nominal,0));
+  };
+  const hint=()=>{
+    const h=$('#ip-hint'); if(!h) return;
+    const tot=parseMoney($('#ip-amt').value);
+    if(tot==null){ h.textContent='O desconto é calculado automaticamente: valor das parcelas menos o valor pago.'; return; }
+    const sum=sumSel(), d=r2(sum-tot);
+    if(qty>1){
+      const each=r2(tot/qty);
+      h.innerHTML=`${qty} parcelas • soma ${fmtV(sum)} • ${fmtV(each)} por parcela`+
+        (d>0.005?`<br>Desconto automático: <b>${fmtV(d)}</b>`:'');
+    }else{
+      h.innerHTML=d>0.005?`Desconto automático: <b>${fmtV(d)}</b>`
+        :(tot>sum+0.005?'Valor pago acima do valor da parcela':'Parcela quitada integralmente');
+    }
+  };
+  $('#ip-amt').addEventListener('input',()=>{ touched=true; hint(); });
+  $('#ip-nom').addEventListener('input',()=>{ if(!touched) $('#ip-amt').value=fmtIn(sumSel()); hint(); });
+  const rep=$('#ip-rep');
+  if(rep) rep.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    qty=Math.max(1,Math.min(maxN,qty+ +b.dataset.d));
+    rep.querySelector('.num').textContent=qty;
+    if(!touched) $('#ip-amt').value=fmtIn(sumSel());
+    hint();
+  });
+  hint();
 }
 function saveInstallment(n){
-  const ins=S.fin.installments, idx=ins.findIndex(x=>x.n===n);
-  if(idx<0) return;
+  const ins=S.fin.installments, idx=ins.findIndex(x=>x.n===n); if(idx<0) return;
   const nom=parseMoney($('#ip-nom').value);
-  const date=$('#ip-date').value||todayStr();
-  const due=$('#ip-due').value||ins[idx].due;
-  const amt=parseMoney($('#ip-amt').value);
-  const disc=parseMoney($('#ip-disc').value)||0;
+  const date=$('#ip-date').value||todayStr(), due=$('#ip-due').value||ins[idx].due;
+  const tot=parseMoney($('#ip-amt').value);
   if(!nom||nom<=0){ toast('Informe o valor da parcela',true); return; }
-  if(amt==null||amt<0){ toast('Valor pago inválido',true); return; }
-  const rep=parseInt(($('#ip-rep')?.querySelector('.num')||{textContent:'0'}).textContent,10)||0;
-  let count=0;
-  for(let j=idx;j<ins.length&&count<=rep;j++){
-    if(j>idx&&instState(ins[j])==='paid'){ j++; continue; }
-    if(j>=ins.length) break;
-    ins[j].nominal=r2(nom);
-    if(j===idx) ins[j].due=due;
-    ins[j].paid={date,amount:r2(amt),discount:r2(disc)};
-    count++; 
-  }
+  if(tot==null||tot<=0){ toast('Informe o valor pago',true); return; }
+  const qty=parseInt(($('#ip-rep')?.querySelector('.num')||{textContent:'1'}).textContent,10)||1;
+  const sel=[ins[idx]]; let j=idx+1;
+  while(sel.length<qty&&j<ins.length){ if(instState(ins[j])!=='paid') sel.push(ins[j]); j++; }
+  const base=r2(Math.round((tot/sel.length)*100)/100);
+  let acc=0;
+  sel.forEach((it2,i)=>{
+    const v=i===sel.length-1?r2(tot-acc):base;
+    acc=r2(acc+v);
+    if(i===0){ it2.nominal=r2(nom); it2.due=due; }
+    const amt=r2(Math.max(0,v));
+    it2.paid={date,amount:amt,discount:r2(Math.max(0,r2(it2.nominal-amt)))};
+  });
   closeSheet(); commit();
-  toast(count>1?count+' parcelas lançadas':'Pagamento salvo');
+  toast(sel.length>1?sel.length+' parcelas quitadas':'Pagamento salvo');
 }
 async function removeInstPay(n){
   const it=S.fin.installments.find(x=>x.n===n); if(!it) return;
@@ -1077,7 +1173,7 @@ function sheetSettleApply(){
       <div class="field"><label>Valor negociado com o banco</label><input class="mi" id="sv-val" inputmode="decimal" value="${fmtIn(bal)}"></div>
       <div class="field"><label>Data</label><input type="date" id="sv-date" value="${todayStr()}"></div>
     </div>
-    <div class="note">Todas as parcelas em aberto serão liquidadas. O desconto (diferença entre o valor nominal restante e o negociado) será lançado parcela a parcela e somado às estatísticas.</div>
+    <div class="note">Todas as parcelas em aberto serão liquidadas. O desconto (diferença entre o valor nominal restante e o negociado) é lançado parcela a parcela e somado às estatísticas.</div>
     <div class="btns"><button class="btn pri" data-act="settle-do">Confirmar quitação</button></div>`);
 }
 async function doSettle(){
@@ -1125,7 +1221,7 @@ function sheetEditContract(){
     <div class="card">
       <div class="field"><label>Valor financiado</label><input class="mi" id="ec-fin" inputmode="decimal" value="${fmtIn(c.financed)}"></div>
       <div class="field"><label>Valor da parcela</label><input class="mi" id="ec-pmt" inputmode="decimal" value="${fmtIn(c.pmt)}"></div>
-      <div class="field"><label>Nº de parcelas</label><input type="number" id="ec-n" min="1" max="120" inputstyle="numeric" inputmode="numeric" value="${c.n}"></div>
+      <div class="field"><label>Nº de parcelas</label><input type="number" id="ec-n" min="1" max="120" inputmode="numeric" value="${c.n}"></div>
       <div class="field"><label>1º vencimento</label><input type="date" id="ec-due" value="${c.firstDue}"></div>
       <div class="field"><label>Taxa mensal (%)</label><input class="mi" id="ec-rate" inputmode="decimal" value="${fmtIn(c.rateM)}"></div>
     </div>
@@ -1146,26 +1242,52 @@ async function saveContractEdit(){
 
 /* ---------- sheets: cartões e despesas ---------- */
 function sheetNewCard(card){
-  cardFormState={close:card?card.closeDay:25,due:card?card.dueDay:10,color:card?card.color:COLORS[0]};
+  cardFormState={
+    close:card?card.closeDay:25, due:card?card.dueDay:10,
+    color:card?card.color:COLORS[0],
+    issuerKey:card?(card.issuerKey||'other'):'other'
+  };
+  const cf=cardFormState;
+  const tile=(i,px=40)=>`<span class="logo" style="width:${px}px;height:${px}px;border-radius:${(px*.26).toFixed(1)}px;background:${i.bg};color:${i.fg};font-size:${tileFs(i.t,px)}px">${i.t}</span>`;
   openSheet(`
     <div class="sh-head"><div class="sh-title">${card?'Editar cartão':'Novo cartão'}</div>
       <button class="sh-x" data-act="close-sheet">${icon('x',15)}</button></div>
     <div class="card">
-      <div class="field"><label>Nome</label><input type="text" id="nc-name" maxlength="24" placeholder="Ex.: Nubank" value="${card?esc(card.name):''}"></div>
-      <div class="field"><label>Emissor</label><input type="text" id="nc-iss" maxlength="30" placeholder="Banco / instituição" value="${card?esc(card.issuer||''):''}"></div>
+      <div class="field"><label>Nome do cartão</label><input type="text" id="nc-name" maxlength="24" placeholder="Ex.: Nubank principal" value="${card?esc(card.name):''}"></div>
       <div class="field"><label>Limite total</label><input class="mi" id="nc-lim" inputmode="decimal" placeholder="R$ 0,00" value="${card?fmtIn(card.limit):''}"></div>
     </div>
     <div class="card">
-      <div class="field"><label>Fechamento (dia)</label>
-        <div class="stepper" id="nc-close"><button type="button" data-d="-1">−</button><span class="num">${cardFormState.close}</span><button type="button" data-d="1">+</button></div></div>
-      <div class="field"><label>Vencimento (dia)</label>
-        <div class="stepper" id="nc-due"><button type="button" data-d="-1">−</button><span class="num">${cardFormState.due}</span><button type="button" data-d="1">+</button></div></div>
+      <div class="lbl" style="padding:14px 16px 0">Banco / emissor</div>
+      <div class="iss-grid">
+        ${ISSUERS.map(i=>`<button class="iss${cf.issuerKey===i.k?' on':''}" data-k="${i.k}">${tile(i)}<span class="nm">${i.n}</span></button>`).join('')}
+        <button class="iss${cf.issuerKey==='other'?' on':''}" data-k="other">
+          <span class="logo" style="width:40px;height:40px;border-radius:10.4px;background:var(--fill);color:var(--sec)">${icon('card',20)}</span>
+          <span class="nm">Outro</span></button>
+      </div>
+      <div id="nc-custom" style="display:${cf.issuerKey==='other'?'block':'none'}">
+        <div class="field"><label>Nome do emissor</label><input type="text" id="nc-iss" maxlength="24" placeholder="Ex.: Banco X" value="${card&&!issOf(card)?esc(card.issuer||''):''}"></div>
+        <div class="dotrow">${COLORS.map(c=>`<button class="cdot${c===cf.color?' on':''}" data-c="${c}" style="background:${c}" aria-label="cor"></button>`).join('')}</div>
+      </div>
     </div>
     <div class="card">
-      <div class="dotrow">${COLORS.map(c=>`<button class="cdot${c===cardFormState.color?' on':''}" data-c="${c}" style="background:${c}" aria-label="cor"></button>`).join('')}</div>
+      <div class="field"><label>Fechamento (dia)</label>
+        <div class="stepper" id="nc-close"><button type="button" data-d="-1">−</button><span class="num">${cf.close}</span><button type="button" data-d="1">+</button></div></div>
+      <div class="field"><label>Vencimento (dia)</label>
+        <div class="stepper" id="nc-due"><button type="button" data-d="-1">−</button><span class="num">${cf.due}</span><button type="button" data-d="1">+</button></div></div>
     </div>
     <div class="note">Regra: compras feitas até o dia do fechamento entram na fatura daquele mês; o vencimento cai no mesmo mês ou no seguinte, conforme os dias informados.</div>
     <div class="btns"><button class="btn pri" data-act="save-card" ${card?`data-id="${card.id}"`:''}>Salvar</button></div>`);
+  $$('.iss').forEach(b=>b.addEventListener('click',()=>{
+    cardFormState.issuerKey=b.dataset.k;
+    $$('.iss').forEach(x=>x.classList.toggle('on',x.dataset.k===b.dataset.k));
+    $('#nc-custom').style.display=b.dataset.k==='other'?'block':'none';
+    if(b.dataset.k!=='other'&&!$('#nc-name').value.trim())
+      $('#nc-name').value=ISSUERS.find(i=>i.k===b.dataset.k).n;
+  }));
+  $$('.cdot').forEach(d=>d.addEventListener('click',()=>{
+    cardFormState.color=d.dataset.c;
+    $$('.cdot').forEach(x=>x.classList.toggle('on',x.dataset.c===cardFormState.color));
+  }));
   const bindStep=(id,key)=>{
     const el=$('#'+id), num=el.querySelector('.num');
     el.addEventListener('click',e=>{
@@ -1175,33 +1297,37 @@ function sheetNewCard(card){
     });
   };
   bindStep('nc-close','close'); bindStep('nc-due','due');
-  $$('.cdot').forEach(d=>d.addEventListener('click',()=>{
-    cardFormState.color=d.dataset.c;
-    $$('.cdot').forEach(x=>x.classList.toggle('on',x.dataset.c===cardFormState.color));
-  }));
 }
 function saveCardForm(id){
-  const name=$('#nc-name').value.trim(), iss=$('#nc-iss').value.trim();
+  const name=$('#nc-name').value.trim();
   const lim=parseMoney($('#nc-lim').value);
   if(!name){ toast('Informe o nome do cartão',true); return; }
   if(!lim||lim<=0){ toast('Informe o limite total',true); return; }
+  const iss=ISSUERS.find(i=>i.k===cardFormState.issuerKey);
+  const data={
+    name, limit:r2(lim),
+    closeDay:cardFormState.close, dueDay:cardFormState.due,
+    issuerKey:iss?iss.k:'other',
+    issuer:iss?iss.n:($('#nc-iss').value||'').trim(),
+    color:cardFormState.color
+  };
   if(id){
     const c=cardById(id); if(!c) return;
-    Object.assign(c,{name,issuer:iss,limit:r2(lim),closeDay:cardFormState.close,dueDay:cardFormState.due,color:cardFormState.color});
+    Object.assign(c,data);
     toast('Cartão atualizado');
   }else{
-    S.cards.push({id:uid(),name,issuer:iss,limit:r2(lim),closeDay:cardFormState.close,dueDay:cardFormState.due,color:cardFormState.color});
+    S.cards.push({id:uid(),...data});
     toast('Cartão adicionado');
   }
   closeSheet(); commit();
 }
 async function delCard(id){
-  const ok=await confirmDialog('Excluir cartão?','As despesas e pagamentos deste cartão também serão apagados.','Excluir',true);
+  const ok=await confirmDialog('Excluir cartão?','O cartão será excluído junto com todas as despesas, parcelas de faturas e pagamentos registrados.','Excluir tudo',true);
   if(!ok) return;
   S.cards=S.cards.filter(c=>c.id!==id);
   S.expenses=S.expenses.filter(e=>e.cardId!==id);
   delete S.invPay[id];
-  popPush(); commit(); toast('Cartão excluído');
+  popPush(); commit(); toast('Cartão e histórico excluídos');
 }
 function sheetExpense(cardId,expId){
   const exp=expId?S.expenses.find(e=>e.id===expId):null;
@@ -1337,8 +1463,7 @@ importFile.addEventListener('change',async ()=>{
     if(!j||!j.fin||!j.fin.contract||!Array.isArray(j.cards)||!Array.isArray(j.expenses)) throw new Error('inválido');
     const ok=await confirmDialog('Importar backup?','Todos os dados atuais serão substituídos pelo conteúdo do arquivo.','Importar',true);
     if(!ok) return;
-    S=j; if(!S.invPay) S.invPay={};
-    S.lastBackup=Date.now();
+    S=migrate(j);
     clearStack(); closeSheet(); save(); refresh();
     toast('Backup restaurado');
   }catch(e){ toast('Arquivo de backup inválido',true); }
@@ -1353,12 +1478,6 @@ async function wipeAll(){
 
 /* ---------- swipe-para-excluir ---------- */
 const SW_W=80;
-function closeAllSwipes(){
-  $$('.swipe-row.open').forEach(r=>{
-    r.classList.remove('open');
-    const c=r.querySelector('.sw-c'); if(c){ c.style.transform=''; }
-  });
-}
 function attachSwipe(row){
   const c=row.querySelector('.sw-c');
   if(!c||c._swiped) return; c._swiped=true;
@@ -1456,10 +1575,12 @@ document.addEventListener('click',e=>{
         case 'edit-contract': sheetEditContract(); break;
         case 'save-contract': saveContractEdit(); break;
         case 'new-card': sheetNewCard(); break;
+        case 'edit-card': sheetNewCard(cardById(d.id)); break;
+        case 'del-card': delCard(d.id); break;
         case 'save-card': saveCardForm(d.id||null); break;
         case 'card': pushCardDetail(d.id); break;
         case 'card-menu': {
-          const i=await actionSheet(null,[{label:'Editar cartão'},{label:'Excluir cartão',danger:true}]);
+          const i=await actionSheet(null,[{label:'Editar cartão'},{label:'Excluir cartão e histórico',danger:true}]);
           if(i===0) sheetNewCard(cardById(d.id));
           else if(i===1) delCard(d.id);
           break;
