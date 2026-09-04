@@ -3,34 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="color-scheme" content="light dark">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F2F2F7">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0C0E12">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Carteira">
 <meta name="format-detection" content="telephone=no">
 <title>Carteira</title>
 <style>
-/* ============ Tokens — linguagem visual iOS, identidade verde-financeira ============ */
+/* ============ Tokens — dark premium, identidade verde-financeira ============ */
 :root{
-  --bg:#F2F2F7; --card:#FFFFFF; --label:#1C1C1E; --sec:#6E6E73; --ter:#AEAEB2;
-  --hair:rgba(60,60,67,.13); --fill:rgba(120,120,128,.14);
-  --tint:#0E7C5C; --tint-bg:rgba(14,124,92,.11);
-  --red:#D92B22; --red-bg:rgba(255,59,48,.11);
-  --amber:#B25F00; --amber-bg:rgba(255,149,0,.13);
-  --nav:rgba(248,248,250,.86); --pri-txt:#fff;
-}
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg:#000; --card:#1C1C1E; --label:#F2F2F7; --sec:#98989E; --ter:#636366;
-    --hair:rgba(84,84,88,.6); --fill:rgba(120,120,128,.24);
-    --tint:#30C48E; --tint-bg:rgba(48,196,142,.15);
-    --red:#FF453A; --red-bg:rgba(255,69,58,.18);
-    --amber:#FF9F0A; --amber-bg:rgba(255,159,10,.18);
-    --nav:rgba(22,22,25,.82); --pri-txt:#06281C;
-  }
+  --bg:#0C0E12; --card:#151920; --card2:#1B212B;
+  --label:#F5F6F8; --sec:#8E939E; --ter:#5C6270;
+  --hair:rgba(255,255,255,.08); --fill:rgba(130,140,160,.15);
+  --tint:#2BC98A; --tint-txt:#04150E; --tint-bg:rgba(43,201,138,.14);
+  --acc2:#6E9BFF; --acc2-bg:rgba(110,155,255,.16);
+  --red:#FF5D55; --red-bg:rgba(255,93,85,.15);
+  --amber:#FFB340; --amber-bg:rgba(255,179,64,.15);
+  --nav:rgba(14,16,20,.82);
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
@@ -62,7 +53,7 @@ button{font-family:inherit;cursor:pointer}
 .nb-btn:active{opacity:.5}
 .nb-ic{display:flex;align-items:center;justify-content:center;width:38px;height:38px;background:none;border:0;color:var(--tint)}
 .nb-ic:active{opacity:.5}
-.scroll{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 16px 130px;scrollbar-width:none;overscroll-behavior:none}
+.scroll{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 16px 150px;scrollbar-width:none;overscroll-behavior:none}
 .scroll::-webkit-scrollbar{display:none}
 .page{min-height:100%}
 h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padding:0 4px}
@@ -71,13 +62,12 @@ h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padd
 .lnk{background:none;border:0;color:var(--tint);font-size:13.5px;font-weight:600;padding:4px 0}
 .foot{text-align:center;color:var(--ter);font-size:11.5px;padding:10px 0 24px}
 
-/* ============ Cards / linhas (listas agrupadas inset) ============ */
-.card{background:var(--card);border-radius:14px;overflow:hidden;margin-bottom:14px;box-shadow:0 0 0 .5px var(--hair)}
-@media (prefers-color-scheme: light){.card{box-shadow:0 0 0 .5px var(--hair),0 1px 2px rgba(0,0,0,.05)}}
+/* ============ Cards / linhas ============ */
+.card{background:var(--card);border-radius:18px;overflow:hidden;margin-bottom:14px;border:.5px solid var(--hair)}
 .row{display:flex;align-items:center;gap:12px;padding:12px 16px;min-height:46px;position:relative}
 .row+.row{border-top:.5px solid var(--hair)}
 .press{cursor:pointer}
-.press:active{background:rgba(120,120,128,.1)}
+.press:active{background:rgba(130,140,160,.09)}
 .grow{flex:1;min-width:0}
 .t{font-size:16px;font-weight:550;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .s{font-size:13px;color:var(--sec);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.35}
@@ -87,23 +77,13 @@ h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padd
 .tint{color:var(--tint)}
 .rcol{flex:0 0 auto}
 .chev{color:var(--ter);display:flex}
-.icb{width:34px;height:34px;border-radius:9px;background:var(--tint-bg);color:var(--tint);display:flex;align-items:center;justify-content:center;flex:0 0 34px}
-.dot{width:10px;height:10px;border-radius:99px;flex:0 0 10px}
+.icb{width:34px;height:34px;border-radius:11px;background:var(--tint-bg);color:var(--tint);display:flex;align-items:center;justify-content:center;flex:0 0 34px}
 .kv{display:flex;justify-content:space-between;gap:16px;padding:11.5px 16px}
 .kv+.kv{border-top:.5px solid var(--hair)}
 .kv .k{font-size:13.5px;color:var(--sec);flex:0 0 auto;max-width:46%}
 .kv .v{font-size:14.5px;font-weight:500;text-align:right;word-break:break-word}
 
-/* logos de emissores (estilizadas, offline) */
-.logo{display:flex;align-items:center;justify-content:center;font-weight:800;letter-spacing:-.02em;flex:0 0 auto;white-space:nowrap;overflow:hidden}
-.iss-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 8px;padding:12px 16px 14px}
-.iss{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:0}
-.iss .logo{transition:box-shadow .15s}
-.iss.on .logo{box-shadow:0 0 0 2.5px var(--card),0 0 0 4.5px var(--tint)}
-.iss .nm{font-size:10px;color:var(--sec);text-align:center;line-height:1.15;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.iss.on .nm{color:var(--tint);font-weight:600}
-
-/* hero / blocos de destaque */
+/* hero / blocos */
 .hero{padding:18px 16px 16px}
 .lbl{font-size:13px;color:var(--sec)}
 .big{font-size:34px;font-weight:800;letter-spacing:-.8px;font-variant-numeric:tabular-nums;margin:4px 0 2px}
@@ -111,15 +91,31 @@ h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padd
 .finv{padding:14px 16px 8px}
 .limb{padding:18px 16px 6px}
 .invc{padding:16px 16px 12px}
+.eyebtn{background:none;border:0;color:var(--sec);display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:99px}
+.eyebtn:active{opacity:.5}
 
-/* ticks do financiamento (48 marcas) */
+/* donut / anel */
+.donut .seg{transition:stroke-dasharray .9s cubic-bezier(.2,.7,.2,1)}
+.donut-wrap{position:relative;display:flex;align-items:center;justify-content:center}
+.donut-c{position:absolute;text-align:center}
+.donut-c .n{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+.donut-c .l{font-size:10px;color:var(--sec);letter-spacing:.06em;text-transform:uppercase}
+.ring-wrap{position:relative;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.ring-c{position:absolute;text-align:center}
+.ring-c .n{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.4px}
+.ring-c .l{font-size:10px;color:var(--sec)}
+.dlegend{display:flex;gap:14px;flex-wrap:wrap}
+.dlegend span{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--sec)}
+.dlegend i{width:8px;height:8px;border-radius:99px;display:block}
+
+/* ticks do financiamento */
 .ticks{display:flex;gap:2.5px;padding:14px 16px 8px;flex-wrap:wrap}
 .tick{flex:1 0 3px;height:14px;border-radius:3.5px;background:var(--fill)}
 .tick.p{background:var(--tint)}
 .tick.l{background:var(--red)}
 .tlegend{display:flex;gap:16px;padding:0 16px 12px;font-size:12px;color:var(--sec)}
 
-/* grades de estatísticas / barras */
+/* grades / barras */
 .krow{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;padding:4px 16px 16px}
 .krow .k{font-size:11.5px;color:var(--sec)}
 .krow .v{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;margin-top:2px;white-space:nowrap;letter-spacing:-.2px}
@@ -130,6 +126,13 @@ h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padd
 .lrow{display:flex;justify-content:space-between;padding:0 16px 14px;font-size:13px;color:var(--sec)}
 .lrow b{font-weight:600;color:var(--label);font-variant-numeric:tabular-nums}
 
+/* mini-cards de stat */
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.stat{background:var(--card);border-radius:18px;padding:14px 16px;border:.5px solid var(--hair)}
+.stat .k{font-size:11.5px;color:var(--sec)}
+.stat .v{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.4px;margin-top:3px}
+.stat .m{font-size:11.5px;color:var(--sec);margin-top:2px}
+
 /* pills */
 .pill{font-size:12px;font-weight:600;padding:3.5px 9px;border-radius:99px;white-space:nowrap;flex:0 0 auto}
 .pill.tint{color:var(--tint);background:var(--tint-bg)}
@@ -138,9 +141,9 @@ h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padd
 .pill.gr{color:var(--sec);background:var(--fill)}
 
 /* botões */
-.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:50px;border-radius:13px;font-size:17px;font-weight:600;border:0;width:100%;transition:transform .15s}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:50px;border-radius:14px;font-size:17px;font-weight:600;border:0;width:100%;transition:transform .15s}
 .btn:active{transform:scale(.97)}
-.btn.pri{background:var(--tint);color:var(--pri-txt)}
+.btn.pri{background:var(--tint);color:var(--tint-txt)}
 .btn.quiet{background:var(--tint-bg);color:var(--tint)}
 .btn.dang{background:var(--red-bg);color:var(--red)}
 .btns{display:flex;flex-direction:column;gap:10px;margin:14px 0 6px}
@@ -148,7 +151,7 @@ h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padd
 .note{font-size:12.5px;color:var(--sec);line-height:1.5;padding:6px 18px 16px}
 .note.in{padding:4px 16px 14px}
 
-/* formulários (planilha iOS) */
+/* formulários */
 .field{display:flex;align-items:center;min-height:50px;padding:8px 16px;gap:12px}
 .field+.field{border-top:.5px solid var(--hair)}
 .field label{flex:1;font-size:15.5px}
@@ -156,26 +159,60 @@ h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padd
 .field input::placeholder{color:var(--ter);font-weight:400}
 .field input[type=number]::-webkit-inner-spin-button,.field input[type=number]::-webkit-outer-spin-button{display:none}
 .field select{background:none;border:0;outline:0;color:var(--tint);font-size:16px;font-weight:600;text-align:right;max-width:55%;-webkit-appearance:none;appearance:none}
-.stepper{display:flex;align-items:center;background:var(--fill);border-radius:9px;overflow:hidden;flex:0 0 auto}
+.stepper{display:flex;align-items:center;background:var(--fill);border-radius:10px;overflow:hidden;flex:0 0 auto}
 .stepper button{width:38px;height:32px;border:0;background:none;font-size:19px;color:var(--tint);font-weight:500}
 .stepper .num{min-width:36px;text-align:center;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}
 .dotrow{display:flex;gap:12px;padding:14px 16px}
 .cdot{width:30px;height:30px;border-radius:99px;border:0;position:relative}
 .cdot.on::after{content:'';position:absolute;inset:-5px;border-radius:99px;border:2px solid var(--label)}
 
-/* linha do tempo (próximos 30 dias) */
-.tl-date{width:44px;text-align:center;flex:0 0 44px}
-.tl-date .d{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
-.tl-date .m{font-size:10.5px;color:var(--sec);text-transform:uppercase;letter-spacing:.05em}
-.tl-dot{width:8px;height:8px;border-radius:99px;background:var(--tint);flex:0 0 8px}
-.tl-dot.red{background:var(--red)}
+/* logos de emissores */
+.logo{display:flex;align-items:center;justify-content:center;font-weight:800;letter-spacing:-.02em;flex:0 0 auto;white-space:nowrap;overflow:hidden}
+.iss-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 8px;padding:12px 16px 14px}
+.iss{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:0}
+.iss .logo{transition:box-shadow .15s}
+.iss.on .logo{box-shadow:0 0 0 2.5px var(--card),0 0 0 4.5px var(--tint)}
+.iss .nm{font-size:10px;color:var(--sec);text-align:center;line-height:1.15;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.iss.on .nm{color:var(--tint);font-weight:600}
+
+/* avatares do feed / agenda */
+.avt{width:38px;height:38px;border-radius:13px;background:var(--fill);display:flex;align-items:center;justify-content:center;flex:0 0 38px;color:var(--sec)}
+.avt.tint{background:var(--tint-bg);color:var(--tint)}
+.avt.red{background:var(--red-bg);color:var(--red)}
+.avt .logo{border-radius:8px}
+
+/* carrossel de cartões (plástico) */
+.carousel{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-padding-left:2px;margin:0 -2px}
+.carousel::-webkit-scrollbar{display:none}
+.slide{scroll-snap-align:center;flex:0 0 calc(100% - 48px);cursor:pointer}
+.plastic{
+  aspect-ratio:1.62;border-radius:22px;padding:18px;position:relative;color:#fff;
+  display:flex;flex-direction:column;justify-content:space-between;
+  box-shadow:0 16px 32px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.16);
+}
+.plastic:active{transform:scale(.985);transition:transform .15s}
+.pl-top{display:flex;justify-content:space-between;align-items:center}
+.pl-brand{font-weight:800;font-size:15px;letter-spacing:.02em;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.pl-kind{font-size:10px;opacity:.78;letter-spacing:.14em;text-transform:uppercase}
+.pl-mid{display:flex;gap:10px;align-items:center}
+.pl-num{font-size:14.5px;letter-spacing:.24em;opacity:.88;font-variant-numeric:tabular-nums}
+.pl-bot{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.pl-name{font-weight:700;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl-sub{font-size:11px;opacity:.78;margin-top:1px}
+.pl-close{font-size:10.5px;opacity:.78;text-align:right;line-height:1.35;flex:0 0 auto}
+.plastic.sm{border-radius:16px;padding:14px;aspect-ratio:auto;min-height:120px;box-shadow:0 10px 22px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.14)}
+.dots{display:flex;justify-content:center;gap:6px;padding:2px 0 4px}
+.dot-i{width:6px;height:6px;border-radius:99px;background:var(--fill);border:0;padding:0}
+.dot-i.on{background:var(--tint);width:18px}
+.addslide{border:1.5px dashed var(--ter);border-radius:22px;aspect-ratio:1.62;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--sec);background:none}
+.addslide .t{color:var(--sec);font-weight:600;font-size:14px}
 
 /* swipe-para-excluir */
 .swipe-row{position:relative;overflow:hidden}
 .sw-a{position:absolute;top:0;bottom:0;right:0;width:80px;display:flex}
 .sw-del{flex:1;background:var(--red);color:#fff;display:flex;flex-direction:column;gap:3px;align-items:center;justify-content:center;font-size:11px;font-weight:600;border:0}
 .sw-c{position:relative;background:var(--card);touch-action:pan-y;cursor:pointer}
-.sw-c:active{background:rgba(120,120,128,.08)}
+.sw-c:active{background:rgba(130,140,160,.07)}
 .swipe-row+.swipe-row .sw-c{border-top:.5px solid var(--hair)}
 .swipe-row .sw-c{transition:transform .32s cubic-bezier(.32,.72,0,1)}
 
@@ -186,7 +223,7 @@ h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padd
 .empty .t{font-size:17px;font-weight:600;color:var(--label)}
 .empty .s{font-size:13.5px;text-align:center;line-height:1.45}
 
-/* ============ Tab bar ============ */
+/* ============ Tab bar + FAB ============ */
 #tabbar{position:absolute;bottom:0;left:0;right:0;z-index:50;display:grid;grid-template-columns:repeat(4,1fr);
   background:var(--nav);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);
   box-shadow:0 -.5px 0 var(--hair);padding:5px 0 max(6px,env(safe-area-inset-bottom))}
@@ -194,8 +231,12 @@ h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padd
 .tab.on{color:var(--tint)}
 .bdg{position:absolute;top:1px;left:calc(50% + 9px);min-width:16px;height:16px;border-radius:8px;background:var(--red);color:#fff;font-size:10px;font-weight:700;display:none;align-items:center;justify-content:center;padding:0 4px;font-style:normal}
 .bdg:not(:empty){display:flex}
+#fab{position:absolute;right:16px;bottom:calc(84px + max(6px,env(safe-area-inset-bottom)));z-index:60;
+  width:56px;height:56px;border-radius:19px;background:var(--tint);color:var(--tint-txt);
+  display:flex;align-items:center;justify-content:center;border:0;box-shadow:0 12px 26px rgba(43,201,138,.32);transition:transform .15s}
+#fab:active{transform:scale(.92)}
 
-/* ============ Navegação empilhada (push) ============ */
+/* ============ Navegação empilhada ============ */
 #stack{position:absolute;inset:0;z-index:100;pointer-events:none}
 .push{position:absolute;inset:0;background:var(--bg);transform:translateX(100%);transition:transform .42s cubic-bezier(.32,.72,0,1);pointer-events:auto;display:flex;flex-direction:column}
 .push.in{transform:translateX(0)}
@@ -206,9 +247,9 @@ h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padd
 /* ============ Bottom sheet ============ */
 #sheet-root{position:fixed;inset:0;z-index:200;pointer-events:none}
 #sheet-root.show{pointer-events:auto}
-#sheet-root .bk{position:absolute;inset:0;background:rgba(0,0,0,.4);opacity:0;transition:opacity .32s}
+#sheet-root .bk{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;transition:opacity .32s}
 #sheet-root.show .bk{opacity:1}
-#sheet-root .sheet{position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-radius:13px 13px 0 0;max-height:calc(100% - 56px);display:flex;flex-direction:column;transform:translateY(105%);transition:transform .46s cubic-bezier(.32,.72,0,1);box-shadow:0 -1px 0 var(--hair)}
+#sheet-root .sheet{position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-radius:14px 14px 0 0;max-height:calc(100% - 56px);display:flex;flex-direction:column;transform:translateY(105%);transition:transform .46s cubic-bezier(.32,.72,0,1);box-shadow:0 -1px 0 var(--hair)}
 #sheet-root.show .sheet{transform:translateY(0)}
 .grip{width:38px;height:5px;border-radius:3px;background:var(--fill);margin:8px auto 2px;flex:0 0 auto;touch-action:none;cursor:grab;align-self:center;padding:8px 0;background-clip:content-box}
 .sheet-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 16px calc(18px + env(safe-area-inset-bottom))}
@@ -217,12 +258,12 @@ h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padd
 .sh-x{width:30px;height:30px;border-radius:99px;background:var(--fill);display:flex;align-items:center;justify-content:center;border:0;color:var(--sec)}
 .sh-x:active{opacity:.5}
 
-/* ============ Alerta (central) e action sheet ============ */
+/* ============ Alerta / action sheet ============ */
 #alert-root{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;padding:24px}
 #alert-root.show{display:flex}
-#alert-root .bk{position:absolute;inset:0;background:rgba(0,0,0,.3);opacity:0;transition:opacity .22s}
+#alert-root .bk{position:absolute;inset:0;background:rgba(0,0,0,.4);opacity:0;transition:opacity .22s}
 #alert-root.on .bk{opacity:1}
-.al{position:relative;width:min(280px,84vw);background:var(--nav);backdrop-filter:blur(28px) saturate(170%);-webkit-backdrop-filter:blur(28px) saturate(170%);border-radius:15px;overflow:hidden;text-align:center;transform:scale(1.14);opacity:0;transition:transform .3s cubic-bezier(.2,1.1,.3,1),opacity .2s}
+.al{position:relative;width:min(280px,84vw);background:rgba(28,32,40,.92);backdrop-filter:blur(28px) saturate(170%);-webkit-backdrop-filter:blur(28px) saturate(170%);border-radius:15px;overflow:hidden;text-align:center;transform:scale(1.14);opacity:0;transition:transform .3s cubic-bezier(.2,1.1,.3,1),opacity .2s;border:.5px solid var(--hair)}
 #alert-root.on .al{transform:scale(1);opacity:1}
 .al .ttl{font-size:16.5px;font-weight:700;padding:18px 18px 6px;letter-spacing:-.2px}
 .al .msg{font-size:13.5px;color:var(--sec);padding:2px 18px 16px;line-height:1.45}
@@ -233,11 +274,11 @@ h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padd
 .al .btns button.ok.d{color:var(--red);font-weight:600}
 #as-root{position:fixed;inset:0;z-index:260;pointer-events:none}
 #as-root.show{pointer-events:auto}
-#as-root .as-bk{position:absolute;inset:0;background:rgba(0,0,0,.32);opacity:0;transition:opacity .3s}
+#as-root .as-bk{position:absolute;inset:0;background:rgba(0,0,0,.4);opacity:0;transition:opacity .3s}
 #as-root.show .as-bk{opacity:1}
 #as-root .as-wrap{position:absolute;bottom:0;left:8px;right:8px;padding-bottom:calc(8px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px;transform:translateY(110%);transition:transform .42s cubic-bezier(.32,.72,0,1)}
 #as-root.show .as-wrap{transform:none}
-.as-card{background:var(--nav);backdrop-filter:blur(24px) saturate(170%);-webkit-backdrop-filter:blur(24px) saturate(170%);border-radius:14px;overflow:hidden}
+.as-card{background:rgba(28,32,40,.92);backdrop-filter:blur(24px) saturate(170%);-webkit-backdrop-filter:blur(24px) saturate(170%);border-radius:14px;overflow:hidden;border:.5px solid var(--hair)}
 .as-t{padding:13px 16px 11px;text-align:center;font-size:13px;color:var(--sec)}
 .as-b{display:block;width:100%;min-height:54px;border:0;background:none;font-size:17px;color:var(--tint);border-top:.5px solid var(--hair)}
 .as-b:first-of-type{border-top:0}
@@ -246,10 +287,10 @@ h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padd
 
 /* ============ Toast ============ */
 #toast-root{position:fixed;top:calc(max(6px,env(safe-area-inset-top)) + 56px);left:0;right:0;display:flex;justify-content:center;z-index:400;pointer-events:none}
-.toast{background:rgba(24,24,28,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#fff;border-radius:99px;padding:10px 18px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:9px;opacity:0;transform:translateY(-14px) scale(.94);transition:.34s cubic-bezier(.2,1,.3,1);box-shadow:0 8px 24px rgba(0,0,0,.28);max-width:86vw}
+.toast{background:rgba(24,28,34,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#fff;border-radius:99px;padding:10px 18px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:9px;opacity:0;transform:translateY(-14px) scale(.94);transition:.34s cubic-bezier(.2,1,.3,1);box-shadow:0 8px 24px rgba(0,0,0,.38);max-width:86vw;border:.5px solid var(--hair)}
 .toast.in{opacity:1;transform:none}
-.toast .ic{color:#4CD493}
-.toast.err .ic{color:#FF6B62}
+.toast .ic{color:var(--tint)}
+.toast.err .ic{color:var(--red)}
 
 /* passos de instalação */
 .step{display:flex;gap:12px;padding:12px 16px;align-items:flex-start}
@@ -263,7 +304,8 @@ h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padd
 
 <div id="views">
   <section class="view on" id="view-home">
-    <header class="navbar" id="nav-home"><div class="nb-l"></div><div class="nb-t">Carteira</div><div class="nb-r"></div></header>
+    <header class="navbar" id="nav-home"><div class="nb-l"></div><div class="nb-t">Carteira</div>
+      <div class="nb-r"><button class="nb-ic" data-act="toggle-hide" id="eyeBtn" aria-label="Ocultar valores"></button></div></header>
     <div class="scroll" id="scroll-home"><div class="page" id="page-home"></div></div>
   </section>
   <section class="view" id="view-fin">
@@ -283,6 +325,8 @@ h1.lt{font-size:34px;font-weight:800;letter-spacing:-.6px;margin:14px 0 2px;padd
 </div>
 
 <div id="stack"></div>
+
+<button id="fab" data-act="fab" aria-label="Ações rápidas"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
 
 <nav id="tabbar">
   <button class="tab on" data-act="tab" data-tab="home"><svg class="ic" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.4 12 3.6l8.5 6.8"/><path d="M5.8 9.6v10.9h12.4V9.6"/><path d="M10 20.5v-5.4h4v5.4"/></svg><span>Início</span><i class="bdg" id="bdg-home"></i></button>
@@ -314,7 +358,9 @@ const pD  = s => { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1
 const r2  = v => Math.round(v*100)/100;
 const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const esc = s => String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const fmtV = v => (v==null||isNaN(v)) ? '—' : Number(v).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const fmtNum = v => Number(v).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const fmtV = v => (v==null||isNaN(v)) ? '—' : (S&&S.hide ? 'R$ ∙∙∙∙∙' : fmtNum(v));   /* telas — respeita privacidade */
+const realV = v => (v==null||isNaN(v)) ? '—' : fmtNum(v);                              /* formulários — sempre real */
 const fmtIn = v => (v==null||v==='') ? '' : Number(v).toFixed(2).replace('.',',');
 const MONTHS=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 const MON=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
@@ -325,7 +371,7 @@ const fmtDateLong = () => cap(new Intl.DateTimeFormat('pt-BR',{weekday:'long',da
 function relDue(s){ const n=daysTo(s); if(n===0)return 'vence hoje'; if(n===1)return 'vence amanhã'; if(n>1)return 'em '+n+' dias'; if(n===-1)return 'ontem'; return 'há '+(-n)+' dias'; }
 function parseMoney(s){ s=String(s??'').trim().replace(/[^\d,.-]/g,''); if(!s) return null; if(s.includes(',')) s=s.replace(/\./g,'').replace(',','.'); const v=parseFloat(s); return isNaN(v)?null:r2(v); }
 
-/* ---------- ícones (SVG traçado, estilo SF Symbols) ---------- */
+/* ---------- ícones (SVG traçado) ---------- */
 const ICONS={
   home:'<path d="M3.5 10.4 12 3.6l8.5 6.8"/><path d="M5.8 9.6v10.9h12.4V9.6"/><path d="M10 20.5v-5.4h4v5.4"/>',
   car:'<path d="M5.1 11.6 6.6 7.4A2 2 0 0 1 8.5 6h7a2 2 0 0 1 1.9 1.4l1.5 4.2"/><rect x="3.1" y="11.6" width="17.8" height="6" rx="2.3"/><path d="M7.3 14.6h1.6M15.1 14.6h1.6"/>',
@@ -341,7 +387,10 @@ const ICONS={
   doc:'<path d="M6.5 3h7.5l4 4v14h-11.5z"/><path d="M14 3v4h4"/><path d="M9.5 12.5h5M9.5 16h5"/>',
   dots:'<circle cx="5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.7" fill="currentColor" stroke="none"/>',
   alert:'<circle cx="12" cy="12" r="9"/><path d="M12 7.5v5"/><circle cx="12" cy="16.2" r="1" fill="currentColor" stroke="none"/>',
-  pencil:'<path d="M4.5 19.5l1-4L16 5a2.12 2.12 0 0 1 3 3L8.5 18.5l-4 1z"/><path d="M14.5 6.5l3 3"/>'
+  pencil:'<path d="M4.5 19.5l1-4L16 5a2.12 2.12 0 0 1 3 3L8.5 18.5l-4 1z"/><path d="M14.5 6.5l3 3"/>',
+  eye:'<path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12s-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>',
+  eyeoff:'<path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12s-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/><path d="M4 4l16 16"/>',
+  cal:'<rect x="3.5" y="5" width="17" height="16" rx="3"/><path d="M3.5 10h17"/><path d="M8 3v4M16 3v4"/>'
 };
 const icon=(n,s=22)=>`<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[n]}</svg>`;
 
@@ -354,13 +403,13 @@ const ISSUERS=[
   {k:'bb',       n:'Banco do Brasil', bg:'#FFDC00',fg:'#0A2C5E',t:'BB'},
   {k:'caixa',    n:'Caixa',           bg:'#005CA9',fg:'#fff',t:'caixa'},
   {k:'santander',n:'Santander',       bg:'#EA1D2C',fg:'#fff',t:'Santander'},
-  {k:'c6',       n:'C6 Bank',         bg:'#1C1E24',fg:'#fff',t:'c6'},
+  {k:'c6',       n:'C6 Bank',         bg:'#23262E',fg:'#fff',t:'c6'},
   {k:'inter',    n:'Inter',           bg:'#FF7A00',fg:'#111318',t:'i'},
   {k:'mp',       n:'Mercado Pago',    bg:'#009EE3',fg:'#fff',t:'MP'},
   {k:'picpay',   n:'PicPay',          bg:'#21C25E',fg:'#fff',t:'P'},
-  {k:'original', n:'Original',        bg:'#1C1E24',fg:'#fff',t:'O'},
+  {k:'original', n:'Original',        bg:'#23262E',fg:'#fff',t:'O'},
   {k:'btg',      n:'BTG+',            bg:'#0A2C5E',fg:'#F7C600',t:'btg+'},
-  {k:'neon',     n:'Neon',            bg:'#1C1E24',fg:'#2BE0FF',t:'N'},
+  {k:'neon',     n:'Neon',            bg:'#23262E',fg:'#2BE0FF',t:'N'},
   {k:'next',     n:'Next',            bg:'#1D5CFF',fg:'#fff',t:'next'},
   {k:'will',     n:'will bank',       bg:'#21D07A',fg:'#06281C',t:'w'}
 ];
@@ -385,6 +434,14 @@ function logoTile(c,px=36){
 }
 const issuerName=c=>{ const i=issOf(c); return i?i.n:(c.issuer||''); };
 const logoColor=c=>{ const i=issOf(c); return i?i.bg:(c.color||'#8E8E93'); };
+function shade(hex,amt){
+  const h=hex.replace('#','');
+  const full=h.length===3?h.split('').map(c=>c+c).join(''):h;
+  const n=parseInt(full,16);
+  const cl=v=>Math.max(0,Math.min(255,v));
+  const r=cl((n>>16)+amt), g=cl(((n>>8)&255)+amt), b=cl((n&255)+amt);
+  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
 
 /* ---------- estado + semente (contrato Santander do anexo) ---------- */
 const LS='carteira.v1';
@@ -405,11 +462,11 @@ function defaultState(){
     totalPaid:105363.59, payMethod:'Boleto', insurer:'Zurich Santander',
     apPrest:'1099454', apAP:'0002972', signed:'2026-04-25', place:'Natal/RN'
   };
-  const s={v:1,createdAt:Date.now(),lastBackup:null,fin:{contract,installments:[]},cards:[],expenses:[],invPay:{}};
+  const s={v:1,createdAt:Date.now(),lastBackup:null,hide:false,fin:{contract,installments:[]},cards:[],expenses:[],invPay:{}};
   s.fin.installments=genInstallments(contract);
   return s;
 }
-/* migração de dados antigos: desconto vira automático; cartões ganham logo pelo nome */
+/* migração: desconto automático; logos por nome; flag de privacidade */
 function migrate(s){
   (s.fin&&s.fin.installments||[]).forEach(it=>{
     if(it.paid) it.paid.discount=r2(Math.max(0,it.nominal-it.paid.amount));
@@ -418,6 +475,7 @@ function migrate(s){
     if(!c.issuerKey){ const k=detectIssuer((c.issuer||'')+' '+(c.name||'')); if(k) c.issuerKey=k; }
   });
   if(!s.invPay) s.invPay={};
+  if(s.hide===undefined) s.hide=false;
   return s;
 }
 let S;
@@ -427,10 +485,7 @@ migrate(S);
 function save(){ S.updatedAt=Date.now(); try{ localStorage.setItem(LS,JSON.stringify(S)); }catch(e){} }
 
 /* ---------- Módulo 1: lógica do financiamento ---------- */
-/* modelo: parcela com pagamento registrado = quitada; desconto = nominal − pago (automático) */
-function instState(it){
-  return (it.paid && it.paid.amount>0.005) ? 'paid' : 'open';
-}
+function instState(it){ return (it.paid && it.paid.amount>0.005) ? 'paid' : 'open'; }
 function finStats(){
   const ins=S.fin.installments;
   let paid=0,paidAmt=0,disc=0,late=0,next=null,openRest=0;
@@ -440,7 +495,6 @@ function finStats(){
   });
   return {count:ins.length,paid,paidAmt:r2(paidAmt),disc:r2(disc),late,next,openRest:r2(openRest)};
 }
-/* saldo devedor pela Tabela Price com a taxa contratual (para quitação antecipada) */
 function priceBalance(k){
   const c=S.fin.contract, i=c.rateM/100;
   if(k>=c.n||i<=0) return 0;
@@ -474,7 +528,6 @@ function splitInstallments(total,n){
   return arr;
 }
 function cycAdd(c,k){ let m=c.m+k,y=c.y; y+=Math.floor((m-1)/12); m=((m-1)%12)+1; return {y,m}; }
-/* ciclo (mês do fechamento) em que a compra entra */
 function purchaseCycle(dateStr,closeDay){
   const [y,m,d]=dateStr.split('-').map(Number);
   return d>closeDay ? cycAdd({y,m},1) : {y,m};
@@ -485,7 +538,6 @@ function currentOpenCycle(card){
   return {y,m};
 }
 const cycKey=c=>c.y+'-'+pad(c.m);
-/* datas reais de fechamento e vencimento da fatura de um ciclo */
 function invoiceDates(card,cyc){
   const dim=(y,m)=>new Date(y,m,0).getDate();
   const cd=Math.min(card.closeDay,dim(cyc.y,cyc.m));
@@ -493,7 +545,6 @@ function invoiceDates(card,cyc){
   if(card.dueDay<=card.closeDay){ m++; if(m>12){m=1;y++;} }
   return {close:new Date(cyc.y,cyc.m-1,cd), due:new Date(y,m-1,Math.min(card.dueDay,dim(y,m)))};
 }
-/* todos os ciclos do cartão com suas parcelas */
 function cardCycles(card){
   const map=new Map();
   S.expenses.filter(e=>e.cardId===card.id).forEach(e=>{
@@ -513,7 +564,6 @@ function cardCycles(card){
   });
   return [...map.values()].sort((a,b)=>b.key<a.key?1:-1);
 }
-/* fatura calculada: total, pagamentos, status e datas */
 function invoiceCalc(card,cyc){
   const items=cyc.items||[];
   const total=r2(items.reduce((s,i)=>s+i.val,0));
@@ -531,7 +581,6 @@ function invoiceCalc(card,cyc){
   return {cyc,items,total,paidAmt,rest,close,due,status};
 }
 function findInv(card,key){ const c=cardCycles(card).find(x=>x.key===key); return c?invoiceCalc(card,c):null; }
-/* limite: usado = parcelas ainda não quitadas (faturas em aberto + a lançar) */
 function cardUsage(card){
   let toPay=0,toLaunch=0;
   cardCycles(card).forEach(cyc=>{
@@ -550,8 +599,17 @@ function pillFor(st){
     : st==='overdue'?{cls:'red',txt:'Vencida'}
     : {cls:'gr',txt:'—'};
 }
+function nextPendingInvoice(c){
+  let best=null;
+  cardCycles(c).forEach(cy=>{
+    const inv=invoiceCalc(c,cy);
+    if(inv.status==='paid'||inv.status==='empty'||inv.rest<=0.005) return;
+    if(!best||inv.due<best.due) best=inv;
+  });
+  return best;
+}
 
-/* ---------- eventos dos próximos 30 dias ---------- */
+/* ---------- agenda e atividade ---------- */
 function upcomingEvents(){
   const t0=+pD(todayStr()), H=t0+30*864e5, evs=[];
   S.fin.installments.forEach(it=>{
@@ -573,22 +631,41 @@ function upcomingEvents(){
 }
 function monthCommitments(){
   const now=new Date(), m=now.getMonth(), y=now.getFullYear();
-  let total=0,finN=0,cardN=0;
+  let total=0,finN=0,cardN=0,finV=0,cardV=0;
   S.fin.installments.forEach(it=>{
     if(instState(it)==='paid') return;
     const d=pD(it.due);
-    if(d.getMonth()===m&&d.getFullYear()===y){ total+=it.nominal; finN++; }
+    if(d.getMonth()===m&&d.getFullYear()===y){ total+=it.nominal; finN++; finV+=it.nominal; }
   });
   S.cards.forEach(c=>cardCycles(c).forEach(cy=>{
     const inv=invoiceCalc(c,cy);
     if(inv.status==='paid'||inv.status==='empty') return;
     const d=pD(inv.due);
-    if(d.getMonth()===m&&d.getFullYear()===y){ total+=inv.rest; cardN++; }
+    if(d.getMonth()===m&&d.getFullYear()===y){ total+=inv.rest; cardN++; cardV+=inv.rest; }
   }));
-  return {total:r2(total),finN,cardN,label:MONTHS[m]};
+  return {total:r2(total),finN,cardN,finV:r2(finV),cardV:r2(cardV),label:MONTHS[m]};
+}
+/* feed: pagamentos + compras + pagamentos de fatura, mais recentes primeiro */
+function activityFeed(limit=6){
+  const acts=[];
+  S.fin.installments.forEach(it=>{
+    if(it.paid) acts.push({date:it.paid.date,kind:'fin',title:'Parcela '+it.n,sub:'Financiamento '+esc(S.fin.contract.bank.split(' ')[0]),amount:it.paid.amount});
+  });
+  S.expenses.forEach(e=>{
+    const c=cardById(e.cardId);
+    acts.push({date:e.date,kind:'exp',card:c,title:e.desc,sub:(e.n>1?e.n+'× parcelado':'à vista')+(c?' • '+esc(c.name):''),amount:e.total});
+  });
+  S.cards.forEach(c=>{
+    Object.entries(S.invPay[c.id]||{}).forEach(([key,pays])=>{
+      const [yy,mm]=key.split('-').map(Number);
+      pays.forEach(p=>acts.push({date:p.date,kind:'pay',card:c,title:'Fatura '+MONTHS[mm-1],sub:esc(c.name),amount:p.amount}));
+    });
+  });
+  acts.sort((a,b)=> b.date===a.date ? 0 : (b.date<a.date?-1:1));
+  return acts.slice(0,limit);
 }
 
-/* ---------- navegação: abas, stack, badges ---------- */
+/* ---------- navegação ---------- */
 const stack=$('#stack'), sheetRoot=$('#sheet-root');
 let currentTab='home', suppressClick=false, cardFormState=null;
 
@@ -596,6 +673,7 @@ function switchTab(tab){
   currentTab=tab;
   $$('.view').forEach(v=>v.classList.toggle('on',v.id==='view-'+tab));
   $$('#tabbar .tab').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
+  $('#fab').style.display=(tab==='home'||tab==='cards')?'flex':'none';
   renderView(tab);
 }
 function renderView(tab){
@@ -639,7 +717,7 @@ function popPush(){
 }
 function clearStack(){ while(stack.children.length) stack.lastElementChild.remove(); }
 
-/* ---------- componentes: toast, alerta, action sheet, sheet ---------- */
+/* ---------- componentes UI ---------- */
 function toast(msg,err){
   const t=document.createElement('div');
   t.className='toast'+(err?' err':'');
@@ -700,6 +778,55 @@ function closeSheet(){
   setTimeout(()=>{ sheetRoot.innerHTML=''; },400);
 }
 
+/* ---------- gráficos SVG: donut e anel ---------- */
+function svgDonut(parts,size,sw){
+  const R=(size-sw)/2, C=2*Math.PI*R, total=parts.reduce((s,p)=>s+p.val,0);
+  let segs='', off=0;
+  if(total>0) parts.forEach(p=>{
+    const len=p.val/total*C;
+    if(len<=0.01) return;
+    segs+=`<circle class="seg" data-final="${len.toFixed(2)} ${C.toFixed(2)}" cx="${size/2}" cy="${size/2}" r="${R}" fill="none" stroke="${p.color}" stroke-width="${sw}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 ${size/2} ${size/2})"/>`;
+    off+=len;
+  });
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" class="donut">
+    <circle cx="${size/2}" cy="${size/2}" r="${R}" fill="none" stroke="var(--fill)" stroke-width="${sw}"/>${segs}</svg>`;
+}
+function svgRing(pct,size,sw,color){
+  const R=(size-sw)/2, C=2*Math.PI*R, len=Math.max(0,Math.min(1,pct))*C;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" class="donut">
+    <circle cx="${size/2}" cy="${size/2}" r="${R}" fill="none" stroke="var(--fill)" stroke-width="${sw}"/>
+    <circle class="seg" data-final="${len.toFixed(2)} ${C.toFixed(2)}" cx="${size/2}" cy="${size/2}" r="${R}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round" transform="rotate(-90 ${size/2} ${size/2})"/></svg>`;
+}
+/* anima segmentos: começa em zero e cresce até o valor final */
+function animateCharts(root){
+  const segs=root.querySelectorAll('.seg[data-final]');
+  if(!segs.length) return;
+  segs.forEach(el=>{ el.style.strokeDasharray='0 100000'; });
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    segs.forEach(el=>{ el.style.strokeDasharray=el.dataset.final; });
+  }));
+}
+
+/* ---------- plástico do cartão ---------- */
+function plasticCard(c,sm){
+  const i=issOf(c);
+  const base=i?i.bg:(c.color||'#8E8E93');
+  const dark=shade(base, i&&i.k==='bb'?-30:-52);
+  const u=cardUsage(c);
+  return `<div class="plastic${sm?' sm':''}" style="background:linear-gradient(135deg,${base},${dark})">
+    <div class="pl-top"><span class="pl-brand">${i?i.t:esc((c.issuer||c.name).trim().charAt(0).toUpperCase())}</span><span class="pl-kind">crédito</span></div>
+    <div class="pl-mid">
+      <svg width="34" height="24" viewBox="0 0 34 24" fill="none"><rect x="1" y="1" width="32" height="22" rx="4.5" fill="rgba(255,255,255,.16)" stroke="rgba(255,255,255,.45)"/><path d="M1 8.5h10M1 15.5h10M23 8.5h10M23 15.5h10M11 8.5v7h12v-7" stroke="rgba(255,255,255,.45)"/></svg>
+      <span class="pl-num">•••• ••••</span>
+    </div>
+    <div class="pl-bot">
+      <div style="min-width:0"><div class="pl-name">${esc(c.name)}</div>
+        <div class="pl-sub">disponível ${fmtV(u.avail)} de ${fmtV(c.limit)}</div></div>
+      <div class="pl-close">fecha dia ${c.closeDay}<br>vence dia ${c.dueDay}</div>
+    </div>
+  </div>`;
+}
+
 /* ---------- renderização: Início ---------- */
 function tickEl(it){
   const cls=instState(it)==='paid'?'p':(daysTo(it.due)<0?'l':'');
@@ -707,16 +834,50 @@ function tickEl(it){
 }
 function renderHomeInto(pg){
   const fs=finStats(), mc=monthCommitments(), c=S.fin.contract;
+  const firstName=esc(c.client.split(' ')[0]);
+  const evs=upcomingEvents();
+  const first=evs[0];
+  const lim=S.cards.length?r2(S.cards.reduce((s,x)=>s+x.limit,0)):0;
+  let avail=0;
+  S.cards.forEach(x=>{ avail+=cardUsage(x).avail; });
   const parts=[];
   if(mc.finN) parts.push(mc.finN+(mc.finN>1?' parcelas':' parcela')+' do financiamento');
   if(mc.cardN) parts.push(mc.cardN+(mc.cardN>1?' faturas':' fatura'));
   pg.innerHTML=`
-    <h1 class="lt">Carteira</h1>
+    <h1 class="lt">Olá, ${firstName}</h1>
     <p class="sub">${fmtDateLong()}</p>
     <div class="card hero">
-      <div class="lbl">Compromissos de ${mc.label}</div>
-      <div class="big">${fmtV(mc.total)}</div>
-      <div class="s">${parts.join(' • ')||'nenhum vencimento este mês'}</div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <div class="grow">
+          <div class="lbl">A pagar em ${mc.label}</div>
+          <div class="big">${fmtV(mc.total)}</div>
+          <div class="s">${parts.join(' • ')||'nenhum vencimento este mês'}</div>
+        </div>
+        <div class="donut-wrap">
+          ${svgDonut([{val:mc.finV,color:'var(--tint)'},{val:mc.cardV,color:'var(--acc2)'}],104,12)}
+          <div class="donut-c"><div class="n">${fmtV(mc.total)}</div><div class="l">total</div></div>
+        </div>
+      </div>
+      <div class="dlegend" style="margin-top:12px">
+        <span><i style="background:var(--tint)"></i>Financiamento ${fmtV(mc.finV)}</span>
+        <span><i style="background:var(--acc2)"></i>Cartões ${fmtV(mc.cardV)}</span>
+      </div>
+      ${first?`<div class="row" style="margin:4px -16px -16px;border-top:.5px solid var(--hair)" ${first.act==='inst'?`data-act="inst" data-n="${first.n}"`:first.act==='card'?`data-act="card" data-id="${first.id}"`:`data-act="invoice" data-id="${first.id}" data-key="${first.key}"`}>
+        <div class="avt tint">${icon('cal',19)}</div>
+        <div class="grow"><div class="s">Próximo vencimento</div><div class="t">${esc(first.title)}</div></div>
+        <div class="val sm">${fmtV(first.val)}</div>
+      </div>`:''}
+    </div>
+    <div class="statgrid">
+      <div class="stat press" ${S.cards.length?'data-act="tab" data-tab="cards"':''}>
+        <div class="k">Crédito disponível</div>
+        <div class="v tint">${S.cards.length?fmtV(r2(avail)):'—'}</div>
+        <div class="m">${S.cards.length?'em '+S.cards.length+' cartão'+(S.cards.length>1?'es':''):'cadastre um cartão'}</div>
+      </div>
+      ${fs.late?`<div class="stat press" data-act="tab" data-tab="fin">
+        <div class="k">Em atraso</div><div class="v red">${fs.late}</div><div class="m">parcela${fs.late>1?'s':''} do financiamento</div></div>`:
+      `<div class="stat press" data-act="tab" data-tab="fin">
+        <div class="k">Descontos obtidos</div><div class="v tint">${fmtV(fs.disc)}</div><div class="m">com pagamentos antecipados</div></div>`}
     </div>
     <div class="sec-h">Financiamento</div>
     ${homeFinCard(fs,c)}
@@ -724,56 +885,42 @@ function renderHomeInto(pg){
     ${homeCardsCard()}
     <div class="sec-h">Próximos 30 dias</div>
     ${upcomingList()}
+    <div class="sec-h">Atividade recente</div>
+    ${activityList()}
     <p class="foot">Carteira • funciona offline • seus dados ficam somente neste aparelho</p>`;
+  animateCharts(pg);
 }
 function homeFinCard(fs,c){
-  const next=fs.next, d=next?daysTo(next.due):null;
-  return `<div class="card press" data-act="tab" data-tab="fin">
-    <div class="row">
-      <div class="icb">${icon('car',19)}</div>
-      <div class="grow"><div class="t">${esc(c.vehicle.model)}</div><div class="s">${esc(c.bank.split(' ')[0])} • ${c.n} parcelas de ${fmtV(c.pmt)}</div></div>
-      <span class="chev">${icon('chev',16)}</span>
+  const pct=fs.count?fs.paid/fs.count:0;
+  return `<div class="card press" data-act="tab" data-tab="fin" style="padding:16px">
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="ring-wrap">
+        ${svgRing(pct,92,9,'var(--tint)')}
+        <div class="ring-c"><div class="n">${Math.round(pct*100)}%</div><div class="l">quitado</div></div>
+      </div>
+      <div class="grow" style="min-width:0">
+        <div class="t">${esc(c.vehicle.model)}</div>
+        <div class="s">${esc(c.bank.split(' ')[0])} • ${fs.paid}/${fs.count} parcelas</div>
+        <div style="margin-top:10px">
+          <div class="s">Restam</div>
+          <div style="font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.4px">${fmtV(fs.openRest)}</div>
+        </div>
+      </div>
     </div>
-    <div class="ticks">${S.fin.installments.map(tickEl).join('')}</div>
-    <div class="tlegend"><span>${fs.paid}/${fs.count} quitadas</span>${fs.late?`<span class="red">${fs.late} atrasadas</span>`:''}</div>
-    <div class="krow">
-      <div><div class="k">Pago</div><div class="v">${fmtV(fs.paidAmt)}</div></div>
-      <div><div class="k">Descontos</div><div class="v tint">${fmtV(fs.disc)}</div></div>
-      <div><div class="k">Restante</div><div class="v">${fmtV(fs.openRest)}</div></div>
-    </div>
-    ${next?`<div class="row"><div class="grow"><div class="t">Próxima • parcela ${next.n}</div><div class="s">${fmtDate(next.due)} • ${fmtV(next.nominal)}</div></div>
-      <span class="pill ${d<0?'red':'tint'}">${relDue(next.due)}</span></div>`:''}
+    <div class="ticks" style="padding:14px 0 4px">${S.fin.installments.map(tickEl).join('')}</div>
+    <div class="tlegend" style="padding:0 0 4px"><span>${fs.paid}/${fs.count} quitadas</span>${fs.late?`<span class="red">${fs.late} atrasadas</span>`:''}</div>
   </div>`;
-}
-function nextPendingInvoice(c){
-  let best=null;
-  cardCycles(c).forEach(cy=>{
-    const inv=invoiceCalc(c,cy);
-    if(inv.status==='paid'||inv.status==='empty'||inv.rest<=0.005) return;
-    if(!best||inv.due<best.due) best=inv;
-  });
-  return best;
 }
 function homeCardsCard(){
   if(!S.cards.length) return `<div class="card"><div class="empty sm">${icon('wallet',40)}
     <div class="t">Nenhum cartão</div><div class="s">Adicione cartões na aba Cartões para acompanhar faturas e limites</div></div></div>`;
-  const lim=r2(S.cards.reduce((s,c)=>s+c.limit,0));
-  let used=0,avail=0;
-  S.cards.forEach(c=>{ const u=cardUsage(c); used+=u.used; avail+=u.avail; });
-  const pct=lim?Math.min(100,Math.round(used/lim*100)):0;
-  return `<div class="card">
-    <div class="finv"><div class="lbl">Disponível total</div><div class="big sm">${fmtV(r2(avail))}</div>
-      <div class="s">de ${fmtV(lim)} em ${S.cards.length} ${S.cards.length>1?'cartões':'cartão'}</div></div>
-    <div class="bar${used>lim?' bad':(pct>70?' warn':'')}"><i style="width:${pct}%"></i></div>
-    <div style="height:8px"></div>
-    ${S.cards.map(c=>{
-      const nd=nextPendingInvoice(c);
-      return `<div class="row press" data-act="card" data-id="${c.id}">
-        ${logoTile(c,34)}
-        <div class="grow"><div class="t">${esc(c.name)}</div><div class="s">${nd?'vence '+fmtDate(nd.due):'sem faturas pendentes'}</div></div>
-        <div class="val sm">${nd?fmtV(nd.rest):'—'}</div>
-      </div>`;}).join('')}
-  </div>`;
+  return `<div class="card">${S.cards.map(c=>{
+    const nd=nextPendingInvoice(c);
+    return `<div class="row press" data-act="card" data-id="${c.id}">
+      ${logoTile(c,36)}
+      <div class="grow"><div class="t">${esc(c.name)}</div><div class="s">${nd?'vence '+fmtDate(nd.due):'sem faturas pendentes'}</div></div>
+      <div class="val sm${nd&&nd.status==='overdue'?' red':''}">${nd?fmtV(nd.rest):'—'}</div>
+    </div>`;}).join('')}</div>`;
 }
 function upcomingList(){
   const evs=upcomingEvents();
@@ -782,25 +929,38 @@ function upcomingList(){
     const d=new Date(ev.t);
     const act=ev.act==='inst'?`data-act="inst" data-n="${ev.n}"`
       :ev.act==='card'?`data-act="card" data-id="${ev.id}"`
-      :ev.act==='invoice'?`data-act="invoice" data-id="${ev.id}" data-key="${ev.key}"`:'';
-    let marker;
-    if(ev.act==='inst') marker=`<span class="tl-dot${ev.kind==='late'?' red':''}"></span>`;
+      :`data-act="invoice" data-id="${ev.id}" data-key="${ev.key}"`;
+    let avt;
+    if(ev.act==='inst') avt=`<div class="avt ${ev.kind==='late'?'red':'tint'}">${icon('car',19)}</div>`;
     else{
       const cc=cardById(ev.id);
-      const ring=ev.kind==='late'?';box-shadow:0 0 0 2px var(--card),0 0 0 3.5px var(--red)':'';
-      marker=cc?`<span class="tl-dot" style="background:${logoColor(cc)}${ring}"></span>`:'<span class="tl-dot"></span>';
+      avt=cc?`<div class="avt">${logoTile(cc,24)}</div>`:`<div class="avt">${icon('card',19)}</div>`;
     }
     return `<div class="row press" ${act}>
-      <div class="tl-date"><div class="d">${d.getDate()}</div><div class="m">${MON[d.getMonth()]}</div></div>
-      ${marker}
-      <div class="grow"><div class="t">${esc(ev.title)}</div></div>
-      <div class="val">${fmtV(ev.val)}</div>
+      ${avt}
+      <div class="grow"><div class="t">${esc(ev.title)}</div><div class="s">${cap(d.getDate()+' de '+MONTHS[d.getMonth()])}</div></div>
+      <div class="val${ev.kind==='late'?' red':''}">${fmtV(ev.val)}</div>
+    </div>`;}).join('')}</div>`;
+}
+function activityList(){
+  const acts=activityFeed();
+  if(!acts.length) return `<div class="card"><div class="row"><div class="s">Nenhuma movimentação registrada ainda</div></div></div>`;
+  return `<div class="card">${acts.map(a=>{
+    let avt;
+    if(a.kind==='fin') avt=`<div class="avt tint">${icon('car',19)}</div>`;
+    else if(a.card) avt=`<div class="avt">${logoTile(a.card,24)}</div>`;
+    else avt=`<div class="avt">${icon('card',19)}</div>`;
+    return `<div class="row">
+      ${avt}
+      <div class="grow"><div class="t">${esc(a.title)}</div><div class="s">${a.sub} • ${fmtDate(a.date)}</div></div>
+      <div class="val sm tint">− ${fmtV(a.amount)}</div>
     </div>`;}).join('')}</div>`;
 }
 
 /* ---------- renderização: Financiamento ---------- */
 function renderFinInto(pg){
   const c=S.fin.contract, fs=finStats(), v=c.vehicle;
+  const bal=priceBalance(fs.paid), pct=fs.count?fs.paid/fs.count:0;
   const instRow=it=>{
     const st=instState(it), late=st!=='paid'&&daysTo(it.due)<0;
     let right,sub=fmtDate(it.due),cls='';
@@ -822,14 +982,18 @@ function renderFinInto(pg){
   pg.innerHTML=`
     <h1 class="lt">Financiamento</h1>
     <p class="sub">Operação nº ${c.op}</p>
-    <div class="card">
-      <div class="ticks">${S.fin.installments.map(tickEl).join('')}</div>
-      <div class="tlegend"><span>${fs.paid}/${fs.count} quitadas</span>${fs.late?`<span class="red">${fs.late} atrasadas</span>`:''}</div>
-      <div class="krow">
-        <div><div class="k">Total pago</div><div class="v">${fmtV(fs.paidAmt)}</div></div>
-        <div><div class="k">Descontos obtidos</div><div class="v tint">${fmtV(fs.disc)}</div></div>
-        <div><div class="k">Restante</div><div class="v">${fmtV(fs.openRest)}</div></div>
-        <div><div class="k">Juros embutidos no contrato</div><div class="v">${fmtV(r2(c.totalPaid-c.financed))}</div></div>
+    <div class="card hero">
+      <div style="display:flex;align-items:center;gap:18px">
+        <div class="ring-wrap">
+          ${svgRing(pct,108,10,'var(--tint)')}
+          <div class="ring-c"><div class="n">${fs.paid}</div><div class="l">de ${fs.count}</div></div>
+        </div>
+        <div class="grow" style="min-width:0">
+          <div class="lbl">Saldo devedor estimado</div>
+          <div class="big sm">${fmtV(bal)}</div>
+          <div class="s">Tabela Price • taxa contratual</div>
+          <div style="margin-top:10px" class="s">Restam ${fmtV(fs.openRest)} em parcelas nominais</div>
+        </div>
       </div>
     </div>
     ${fs.next?`
@@ -845,9 +1009,20 @@ function renderFinInto(pg){
     <div class="card"><div class="finv"><div class="lbl">Financiamento quitado</div>
       <div class="big sm tint">${icon('check',28)}</div>
       <div class="s">Total pago ${fmtV(fs.paidAmt)} • descontos somaram ${fmtV(fs.disc)}</div></div></div>`}
+    <div class="card">
+      <div class="ticks">${S.fin.installments.map(tickEl).join('')}</div>
+      <div class="tlegend"><span>${fs.paid}/${fs.count} quitadas</span>${fs.late?`<span class="red">${fs.late} atrasadas</span>`:''}</div>
+      <div class="krow">
+        <div><div class="k">Total pago</div><div class="v">${fmtV(fs.paidAmt)}</div></div>
+        <div><div class="k">Descontos obtidos</div><div class="v tint">${fmtV(fs.disc)}</div></div>
+        <div><div class="k">Restante</div><div class="v">${fmtV(fs.openRest)}</div></div>
+        <div><div class="k">Juros embutidos no contrato</div><div class="v">${fmtV(r2(c.totalPaid-c.financed))}</div></div>
+      </div>
+    </div>
     <div class="sec-h">Contrato</div>
     <div class="card">
-      <div class="row"><div class="grow"><div class="t">${esc(v.brand)} ${esc(v.model)}</div><div class="s">${v.year} • ${esc(v.color)} • placa ${v.plate}</div></div></div>
+      <div class="row"><div class="icb">${icon('car',19)}</div>
+        <div class="grow"><div class="t">${esc(v.brand)} ${esc(v.model)}</div><div class="s">${v.year} • ${esc(v.color)} • placa ${v.plate}</div></div></div>
       <div class="row"><div class="s grow">Valor financiado</div><div class="val sm">${fmtV(c.financed)}</div></div>
       <div class="row"><div class="s grow">Parcelas</div><div class="val sm">${c.n} × ${fmtV(c.pmt)}</div></div>
       <div class="row"><div class="s grow">Juros / CET</div><div class="val sm">${String(c.rateM).replace('.',',')}% a.m. • ${String(c.cetA).replace('.',',')}% a.a.</div></div>
@@ -856,39 +1031,44 @@ function renderFinInto(pg){
     </div>
     ${Object.keys(years).sort().map(y=>`<div class="sec-h">${y}</div>
       <div class="card">${years[y].map(instRow).join('')}</div>`).join('')}`;
+  animateCharts(pg);
 }
 
-/* ---------- renderização: Cartões (lista) ---------- */
+/* ---------- renderização: Cartões (carrossel) ---------- */
 function renderCardsInto(pg){
   const cards=S.cards;
   const lim=cards.length?r2(cards.reduce((s,c)=>s+c.limit,0)):0;
+  let used=0,avail=0;
+  cards.forEach(c=>{ const u=cardUsage(c); used+=u.used; avail+=u.avail; });
+  const pct=lim?Math.min(100,Math.round(used/lim*100)):0;
   pg.innerHTML=`<h1 class="lt">Cartões</h1>
     ${cards.length?`<p class="sub">${cards.length} ${cards.length>1?'cartões':'cartão'} • limite total ${fmtV(lim)}</p>`:''}
-    ${cards.length?cards.map(cardCard).join(''):
+    ${cards.length?`
+    <div class="carousel" id="car">
+      ${cards.map(c=>`<div class="slide" data-act="card" data-id="${c.id}">${plasticCard(c)}</div>`).join('')}
+      <button class="slide addslide" data-act="new-card">${icon('plus',26)}<span class="t">Adicionar cartão</span></button>
+    </div>
+    <div class="dots" id="car-dots">${cards.map((c,i)=>`<button class="dot-i${i===0?' on':''}" aria-label="cartão ${i+1}"></button>`).join('')}</div>
+    <div class="card">
+      <div class="limb"><div class="lbl">Crédito disponível</div><div class="big sm">${fmtV(r2(avail))}</div>
+        <div class="s">de ${fmtV(lim)} • ${fmtV(r2(used))} comprometidos</div></div>
+      <div class="bar${used>lim?' bad':(pct>70?' warn':'')}"><i style="width:${pct}%"></i></div>
+      <div style="height:10px"></div>
+    </div>`:
     `<div class="card"><div class="empty">${icon('wallet',44)}
       <div class="t">Nenhum cartão cadastrado</div>
       <div class="s">Toque no + acima para cadastrar um cartão de crédito com limite, fechamento e vencimento</div></div></div>`}`;
-}
-function cardCard(c){
-  const cyc=cardCycles(c).find(x=>x.key===cycKey(currentOpenCycle(c)));
-  const inv=invoiceCalc(c,cyc);
-  const u=cardUsage(c);
-  const pct=c.limit?Math.min(100,Math.round(u.used/c.limit*100)):0;
-  const p=pillFor(inv.status);
-  return `<div class="card press" data-act="card" data-id="${c.id}">
-    <div class="row">
-      ${logoTile(c,38)}
-      <div class="grow"><div class="t">${esc(c.name)}</div><div class="s">${esc(issuerName(c))}</div></div>
-      <span class="pill ${p.cls}">${p.txt}</span>
-    </div>
-    <div class="finv">
-      <div class="lbl">Fatura de ${MONTHS[cyc.m-1]}</div>
-      <div class="big sm">${fmtV(inv.total)}</div>
-      <div class="s">fecha ${fmtDate(inv.close)} • vence ${fmtDate(inv.due)}</div>
-    </div>
-    <div class="bar${u.used>c.limit?' bad':(pct>70?' warn':'')}"><i style="width:${pct}%"></i></div>
-    <div class="lrow"><span>Disponível <b>${fmtV(u.avail)}</b></span><span>de ${fmtV(c.limit)}</span></div>
-  </div>`;
+  const car=$('#car'), dots=$('#car-dots');
+  if(car&&dots){
+    const upd=()=>{
+      const slide=car.querySelector('.slide');
+      if(!slide) return;
+      const w=slide.offsetWidth+12;
+      const i=Math.max(0,Math.min(cards.length-1,Math.round(car.scrollLeft/w)));
+      dots.querySelectorAll('.dot-i').forEach((d,j)=>d.classList.toggle('on',j===i));
+    };
+    car.addEventListener('scroll',upd,{passive:true});
+  }
 }
 
 /* ---------- renderização: detalhe do cartão ---------- */
@@ -911,14 +1091,10 @@ function renderCardDetailInto(el,c){
   const p=pillFor(inv.status);
   const exps=S.expenses.filter(e=>e.cardId===c.id).slice().reverse();
   pg.innerHTML=`
+    <div style="padding:2px 0 14px">${plasticCard(c,true)}</div>
     <div class="card">
-      <div class="row" style="padding-bottom:4px">
-        ${logoTile(c,40)}
-        <div class="grow"><div class="t">${esc(c.name)}</div>
-          <div class="s">${esc(issuerName(c))} • fecha dia ${c.closeDay} • vence dia ${c.dueDay}</div></div>
-      </div>
       <div class="limb"><div class="lbl">Disponível</div><div class="big">${fmtV(u.avail)}</div>
-        <div class="s">de ${fmtV(c.limit)} de limite</div></div>
+        <div class="s">de ${fmtV(c.limit)} de limite${issuerName(c)?' • '+esc(issuerName(c)):''}</div></div>
       <div class="bar${u.used>c.limit?' bad':(pct>70?' warn':'')}"><i style="width:${pct}%"></i></div>
       <div class="krow">
         <div><div class="k">Utilizado</div><div class="v">${fmtV(u.used)}</div></div>
@@ -1047,7 +1223,7 @@ function renderSettingsInto(pg){
     </div>
     <div class="sec-h">Sobre</div>
     <div class="card">
-      <div class="kv"><span class="k">Carteira</span><span class="v">versão 1.1</span></div>
+      <div class="kv"><span class="k">Carteira</span><span class="v">versão 1.2</span></div>
       <div class="kv"><span class="k">Armazenamento</span><span class="v">somente neste aparelho (offline)</span></div>
     </div>
     <p class="foot">Nada é enviado à internet — exporte backups com frequência</p>`;
@@ -1097,10 +1273,10 @@ function openPaySheet(n){
     const sum=sumSel(), d=r2(sum-tot);
     if(qty>1){
       const each=r2(tot/qty);
-      h.innerHTML=`${qty} parcelas • soma ${fmtV(sum)} • ${fmtV(each)} por parcela`+
-        (d>0.005?`<br>Desconto automático: <b>${fmtV(d)}</b>`:'');
+      h.innerHTML=`${qty} parcelas • soma ${realV(sum)} • ${realV(each)} por parcela`+
+        (d>0.005?`<br>Desconto automático: <b>${realV(d)}</b>`:'');
     }else{
-      h.innerHTML=d>0.005?`Desconto automático: <b>${fmtV(d)}</b>`
+      h.innerHTML=d>0.005?`Desconto automático: <b>${realV(d)}</b>`
         :(tot>sum+0.005?'Valor pago acima do valor da parcela':'Parcela quitada integralmente');
     }
   };
@@ -1155,11 +1331,11 @@ function sheetSettle(){
     <div class="sh-head"><div class="sh-title">Quitação antecipada</div>
       <button class="sh-x" data-act="close-sheet">${icon('x',15)}</button></div>
     <div class="card">
-      <div class="limb"><div class="lbl">Saldo devedor estimado hoje</div><div class="big">${fmtV(bal)}</div>
+      <div class="limb"><div class="lbl">Saldo devedor estimado hoje</div><div class="big">${realV(bal)}</div>
         <div class="s">Tabela Price • taxa contratual</div></div>
       <div class="row"><div class="s grow">Parcelas quitadas</div><div class="val sm">${fs.paid} de ${c.n}</div></div>
-      <div class="row"><div class="s grow">Soma das parcelas restantes</div><div class="val sm">${fmtV(openNom)}</div></div>
-      <div class="row"><div class="s grow">Economia de juros ao quitar</div><div class="val sm tint">${fmtV(r2(openNom-bal))}</div></div>
+      <div class="row"><div class="s grow">Soma das parcelas restantes</div><div class="val sm">${realV(openNom)}</div></div>
+      <div class="row"><div class="s grow">Economia de juros ao quitar</div><div class="val sm tint">${realV(r2(openNom-bal))}</div></div>
     </div>
     <div class="note">Estimativa pela Tabela Price com a taxa contratual de ${String(c.rateM).replace('.',',')}% a.m. O valor exato é informado pelo Santander no momento da negociação.</div>
     <div class="btns"><button class="btn pri" data-act="settle-reg">Registrar quitação negociada</button></div>`);
@@ -1365,7 +1541,7 @@ function sheetExpense(cardId,expId){
     const cy=purchaseCycle(dt,card.closeDay);
     const dd=invoiceDates(card,cy);
     const last=nVal>1?cycAdd(cy,nVal-1):null;
-    h.innerHTML=`<b>${nVal}× de ${fmtV(u[0])}${nVal>1?' • total '+fmtV(val):''}</b><br>
+    h.innerHTML=`<b>${nVal}× de ${realV(u[0])}${nVal>1?' • total '+realV(val):''}</b><br>
       1ª parcela na fatura de ${MONTHS[cy.m-1]} — fecha ${fmtDate(ymd(dd.close))}, vence ${fmtDate(ymd(dd.due))}${last?`<br>última parcela em ${MONTHS[last.m-1]}/${last.y}`:''}`;
   };
   const num=$('#ex-n .num');
@@ -1413,7 +1589,7 @@ function sheetPayInvoice(cardId,key){
       <button class="sh-x" data-act="close-sheet">${icon('x',15)}</button></div>
     <div class="card">
       <div class="row"><div class="grow"><div class="t">Fatura de ${MONTHS[inv.cyc.m-1]} de ${inv.cyc.y}</div>
-        <div class="s">${esc(card.name)} • falta ${fmtV(inv.rest)}</div></div></div>
+        <div class="s">${esc(card.name)} • falta ${realV(inv.rest)}</div></div></div>
       <div class="field"><label>Data</label><input type="date" id="pi-date" value="${todayStr()}"></div>
       <div class="field"><label>Valor pago</label><input class="mi" id="pi-amt" inputmode="decimal" value="${fmtIn(inv.rest)}"></div>
     </div>
@@ -1435,6 +1611,30 @@ async function delInvoicePayment(cardId,key,i){
   S.invPay[cardId][key].splice(i,1);
   if(!S.invPay[cardId][key].length) delete S.invPay[cardId][key];
   commit(); toast('Pagamento removido');
+}
+
+/* ---------- ações rápidas (FAB) ---------- */
+async function openQuickActions(){
+  const i=await actionSheet('O que você quer registrar?',[
+    {label:'Nova despesa em cartão'},
+    {label:'Pagar parcela do financiamento'},
+    {label:'Pagar fatura pendente'}
+  ]);
+  if(i===0) sheetExpense(null);
+  else if(i===1){
+    const fs=finStats();
+    if(fs.next) openPaySheet(fs.next.n);
+    else toast('Financiamento já quitado');
+  }
+  else if(i===2){
+    let best=null;
+    S.cards.forEach(c=>{
+      const inv=nextPendingInvoice(c);
+      if(inv&&(!best||inv.due<best.inv.due)) best={c,inv};
+    });
+    if(best) sheetPayInvoice(best.c.id,best.inv.cyc.key);
+    else toast('Nenhuma fatura pendente');
+  }
 }
 
 /* ---------- backup ---------- */
@@ -1517,7 +1717,7 @@ function attachSwipe(row){
   c.addEventListener('pointercancel',end);
 }
 
-/* ---------- gesto de voltar arrastando da borda (push screens) ---------- */
+/* ---------- gesto de voltar arrastando da borda ---------- */
 let edge=null;
 stack.addEventListener('pointerdown',e=>{
   if(!stack.children.length||e.clientX>28) return;
@@ -1548,6 +1748,10 @@ stack.addEventListener('pointerup',edgeEnd);
 stack.addEventListener('pointercancel',edgeEnd);
 
 /* ---------- delegação de eventos ---------- */
+function updateEyeBtn(){
+  const b=$('#eyeBtn'); if(!b) return;
+  b.innerHTML=icon(S.hide?'eyeoff':'eye',20);
+}
 document.addEventListener('click',e=>{
   if(suppressClick){ suppressClick=false; e.stopPropagation(); e.preventDefault(); return; }
   const openRow=e.target.closest('.swipe-row.open');
@@ -1565,6 +1769,12 @@ document.addEventListener('click',e=>{
         case 'close-sheet': closeSheet(); break;
         case 'tab': switchTab(d.tab); break;
         case 'pop': popPush(); break;
+        case 'toggle-hide':
+          S.hide=!S.hide; save();
+          updateEyeBtn();
+          if(stack.children.length) refresh(); else renderView(currentTab);
+          break;
+        case 'fab': openQuickActions(); break;
         case 'inst': openPaySheet(+d.n); break;
         case 'save-inst': saveInstallment(+d.n); break;
         case 'del-inst': removeInstPay(+d.n); break;
@@ -1607,8 +1817,8 @@ function setupPWA(){
     const c=document.createElement('canvas'); c.width=c.height=180;
     const x=c.getContext('2d');
     const rr=(cx,cy,w,h,r)=>{ x.beginPath(); x.moveTo(cx+r,cy); x.arcTo(cx+w,cy,cx+w,cy+h,r); x.arcTo(cx+w,cy+h,cx,cy+h,r); x.arcTo(cx,cy+h,cx,cy,r); x.arcTo(cx,cy,cx+w,cy,r); x.closePath(); };
-    x.fillStyle='#0E7C5C'; x.fillRect(0,0,180,180);
-    x.strokeStyle='#FFFFFF'; x.fillStyle='#FFFFFF';
+    x.fillStyle='#0C0E12'; x.fillRect(0,0,180,180);
+    x.strokeStyle='#2BC98A'; x.fillStyle='#2BC98A';
     x.lineWidth=12; x.lineJoin='round'; x.lineCap='round';
     rr(36,62,108,80,18); x.stroke();
     x.lineWidth=10;
@@ -1620,7 +1830,7 @@ function setupPWA(){
     const man={
       name:'Carteira', short_name:'Carteira', display:'standalone',
       start_url:location.origin+location.pathname,
-      background_color:'#F2F2F7', theme_color:'#F2F2F7',
+      background_color:'#0C0E12', theme_color:'#0C0E12',
       icons:[{src:url,sizes:'180x180',type:'image/png'}]
     };
     const mlink=document.createElement('link'); mlink.rel='manifest';
@@ -1638,6 +1848,7 @@ function setupPWA(){
 });
 document.addEventListener('touchstart',()=>{},{passive:true});
 setupPWA();
+updateEyeBtn();
 switchTab('home');
 updateBadges();
 </script>
