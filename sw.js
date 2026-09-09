@@ -1,5 +1,5 @@
 /* Service Worker — cache offline da Carteira */
-const CACHE='carteira-v3';
+const CACHE='carteira-v5';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE)
