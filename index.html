@@ -12,13 +12,15 @@
 <meta name="format-detection" content="telephone=no">
 <title>Carteira</title>
 <style>
-/* ============ v1.4 · PERFORMANCE ============
-   Vidro "flat": rgba + hairline + especular (pré-computado, ~0 GPU).
-   Zero backdrop-filter. Layers próprias p/ navbar e tab bar.
-   content-visibility pula render fora da tela. Animações só em
-   transform/opacity (compositor). */
+/* ============ v1.5 · AURORA HUD ============
+   Identidade: painel de instrumento financeiro.
+   Números em fonte mono, micro-rótulos HUD, grade técnica,
+   aurora em todas as telas, anel orbital e status pulsante.
+   Tudo com custo ~zero: sem blur, animações só em transform,
+   camadas pintadas uma única vez. */
 :root{
   --bg:#05060A;
+  --mono:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,'Roboto Mono',monospace;
   --label:#F5F6F8; --sec:#9BA1AC; --ter:#5F6672;
   --hair:rgba(255,255,255,.085);
   --glass:rgba(19,23,31,.66);
@@ -37,7 +39,7 @@ body{
   background:var(--bg);color:var(--label);font-size:16px;position:fixed;inset:0;width:100%;
   overflow:hidden;-webkit-font-smoothing:antialiased;user-select:none;-webkit-user-select:none;touch-action:manipulation;
 }
-/* aurora estática — pintada 1x, virou identidade sem custo dinâmico */
+/* aurora — pintada 1x, é a cena que os vidros flatten "refratam" */
 body::before{
   content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   background:
@@ -45,6 +47,13 @@ body::before{
     radial-gradient(50% 44% at 86% 6%, rgba(127,169,255,.12), transparent 64%),
     radial-gradient(54% 46% at 72% 92%, rgba(46,229,154,.09), transparent 66%),
     radial-gradient(42% 38% at 8% 88%, rgba(84,140,210,.08), transparent 60%);
+}
+/* grade técnica de instrumento, quase invisível */
+body::after{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    repeating-linear-gradient(0deg,rgba(255,255,255,.022) 0 1px,transparent 1px 44px),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.022) 0 1px,transparent 1px 44px);
 }
 @media (prefers-reduced-motion: reduce){
   *{transition-duration:0s!important;animation-duration:0s!important}
@@ -77,8 +86,8 @@ button{font-family:inherit;cursor:pointer}
 .page{min-height:100%}
 h1.lt{font-size:36px;font-weight:800;letter-spacing:-.9px;margin:14px 0 2px;padding:0 4px}
 .sub{font-size:15px;color:var(--sec);padding:0 4px;margin-bottom:14px}
-.sec-h{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:600;color:var(--sec);padding:22px 16px 9px}
-.lnk{background:none;border:0;color:var(--tint);font-size:13.5px;font-weight:600;padding:4px 0}
+.sec-h{display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.13em;padding:22px 16px 9px}
+.lnk{background:none;border:0;color:var(--tint);font-size:13.5px;font-weight:600;padding:4px 0;text-transform:none;letter-spacing:0}
 .foot{text-align:center;color:var(--ter);font-size:11.5px;padding:10px 0 24px}
 
 /* ============ Cards de vidro flat ============ */
@@ -89,7 +98,6 @@ h1.lt{font-size:36px;font-weight:800;letter-spacing:-.9px;margin:14px 0 2px;padd
   box-shadow:var(--spec), 0 6px 16px rgba(0,0,0,.22);
 }
 .card.press:active{background:rgba(30,36,48,.72)}
-/* o Safari pinta só o que está na tela — listas longas viram poucas rows */
 .card .row{content-visibility:auto;contain-intrinsic-size:46px}
 .row{display:flex;align-items:center;gap:12px;padding:12px 16px;min-height:46px;position:relative}
 .row+.row{border-top:.5px solid var(--hair)}
@@ -98,7 +106,7 @@ h1.lt{font-size:36px;font-weight:800;letter-spacing:-.9px;margin:14px 0 2px;padd
 .grow{flex:1;min-width:0}
 .t{font-size:16px;font-weight:550;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .s{font-size:13px;color:var(--sec);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.35}
-.val{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.2px;text-align:right;white-space:nowrap}
+.val{font-size:16px;font-weight:600;letter-spacing:-.2px;text-align:right;white-space:nowrap}
 .val.sm{font-size:14.5px}
 .red{color:var(--red)}
 .tint{color:var(--tint)}
@@ -110,30 +118,45 @@ h1.lt{font-size:36px;font-weight:800;letter-spacing:-.9px;margin:14px 0 2px;padd
 .kv .k{font-size:13.5px;color:var(--sec);flex:0 0 auto;max-width:46%}
 .kv .v{font-size:14.5px;font-weight:500;text-align:right;word-break:break-word}
 
+/* números em mono — a assinatura do painel */
+.big,.val,.krow .v,.stat .v,.donut-c .n,.ring-c .n,.tl-date .d,.pl-num,.stepper .num,.bdg{font-family:var(--mono)}
+.big{font-size:36px;font-weight:800;letter-spacing:-.5px;font-variant-numeric:tabular-nums;margin:5px 0 2px}
+.big.sm{font-size:26px;letter-spacing:-.3px}
+
+/* hero: vidro esmeralda com cantoneiras de mira */
 .card.hero{background:rgba(26,74,57,.55);border-color:rgba(46,229,154,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 8px 20px rgba(0,0,0,.26)}
+.card.hero::before{content:'';position:absolute;top:8px;left:8px;width:14px;height:14px;pointer-events:none;border-top:1.5px solid rgba(46,229,154,.55);border-left:1.5px solid rgba(46,229,154,.55)}
+.card.hero::after{content:'';position:absolute;bottom:8px;right:8px;width:14px;height:14px;pointer-events:none;border-bottom:1.5px solid rgba(46,229,154,.55);border-right:1.5px solid rgba(46,229,154,.55)}
 .hero{padding:20px 16px 18px}
-.lbl{font-size:13px;color:rgba(230,240,235,.75)}
+.lbl{font-size:11px;color:rgba(230,240,235,.75);text-transform:uppercase;letter-spacing:.14em;font-weight:600}
 .card.hero .s{color:rgba(230,240,235,.72)}
-.big{font-size:38px;font-weight:800;letter-spacing:-1px;font-variant-numeric:tabular-nums;margin:5px 0 2px}
-.big.sm{font-size:27px;letter-spacing:-.5px}
 .finv{padding:14px 16px 8px}
 .limb{padding:18px 16px 6px}
 .invc{padding:16px 16px 12px}
 .eyebtn{background:none;border:0;color:var(--sec);display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:99px}
 
-/* donut / anel */
+/* donut + anel orbital (rotação pura — compositor, custo ~0) */
 .donut .seg{transition:stroke-dashoffset .9s cubic-bezier(.2,.7,.2,1)}
 .donut-wrap{position:relative;display:flex;align-items:center;justify-content:center}
 .donut-c{position:absolute;text-align:center}
-.donut-c .n{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
-.donut-c .l{font-size:9.5px;color:var(--sec);letter-spacing:.08em;text-transform:uppercase}
+.donut-c .n{font-size:16px;font-weight:800;letter-spacing:-.3px}
+.donut-c .l{font-size:9.5px;color:var(--sec);letter-spacing:.14em;text-transform:uppercase}
 .ring-wrap{position:relative;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
 .ring-c{position:absolute;text-align:center}
-.ring-c .n{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.4px}
+.ring-c .n{font-size:20px;font-weight:800;letter-spacing:-.4px}
 .ring-c .l{font-size:9.5px;color:var(--sec)}
+.orbit{position:absolute;inset:0;margin:auto;display:block;pointer-events:none;animation:spin 32s linear infinite}
+@keyframes spin{to{transform:rotate(1turn)}}
 .dlegend{display:flex;gap:14px;flex-wrap:wrap}
 .dlegend span{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--sec)}
 .dlegend i{width:8px;height:8px;border-radius:99px;display:block}
+
+/* status pulsante — o que está "ao vivo" */
+.pulse{display:inline-block;width:7px;height:7px;border-radius:99px;background:var(--tint);position:relative;flex:0 0 7px}
+.pulse::after{content:'';position:absolute;inset:-4px;border-radius:99px;border:1px solid var(--tint);opacity:0;animation:ping 2.2s cubic-bezier(0,0,.2,1) infinite}
+@keyframes ping{0%{transform:scale(.4);opacity:.9}70%,100%{transform:scale(1.7);opacity:0}}
+.pdot{display:inline-block;width:5px;height:5px;border-radius:99px;background:currentColor;margin-right:5px;vertical-align:1px;animation:blink 1.8s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
 
 /* ticks */
 .ticks{display:flex;gap:2.5px;padding:14px 16px 8px;flex-wrap:wrap}
@@ -143,20 +166,20 @@ h1.lt{font-size:36px;font-weight:800;letter-spacing:-.9px;margin:14px 0 2px;padd
 .tlegend{display:flex;gap:16px;padding:0 16px 12px;font-size:12px;color:var(--sec)}
 
 .krow{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;padding:4px 16px 16px}
-.krow .k{font-size:11.5px;color:var(--sec)}
-.krow .v{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;margin-top:2px;white-space:nowrap;letter-spacing:-.2px}
+.krow .k{font-size:10.5px;color:var(--sec);text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+.krow .v{font-size:15px;font-weight:700;margin-top:2px;white-space:nowrap}
 .bar{height:8px;border-radius:99px;background:var(--fill);overflow:hidden;margin:8px 16px}
 .bar i{display:block;height:100%;border-radius:99px;background:var(--tint);transition:width .5s cubic-bezier(.32,.72,0,1)}
 .bar.warn i{background:var(--amber)}
 .bar.bad i{background:var(--red)}
 .lrow{display:flex;justify-content:space-between;padding:0 16px 14px;font-size:13px;color:var(--sec)}
-.lrow b{font-weight:600;color:var(--label);font-variant-numeric:tabular-nums}
+.lrow b{font-weight:600;color:var(--label)}
 
 .statgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
 .stat{background:var(--glass);border:.5px solid rgba(255,255,255,.075);border-radius:20px;padding:14px 16px;box-shadow:var(--spec),0 5px 14px rgba(0,0,0,.2)}
 .stat.press:active{background:rgba(30,36,48,.72)}
-.stat .k{font-size:11.5px;color:var(--sec)}
-.stat .v{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.4px;margin-top:3px}
+.stat .k{font-size:10.5px;color:var(--sec);text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+.stat .v{font-size:19px;font-weight:800;letter-spacing:-.3px;margin-top:3px}
 .stat .m{font-size:11.5px;color:var(--sec);margin-top:2px}
 
 .pill{font-size:12px;font-weight:600;padding:3.5px 9px;border-radius:99px;white-space:nowrap;flex:0 0 auto;box-shadow:inset 0 1px 0 rgba(255,255,255,.10)}
@@ -178,13 +201,13 @@ h1.lt{font-size:36px;font-weight:800;letter-spacing:-.9px;margin:14px 0 2px;padd
 .field{display:flex;align-items:center;min-height:50px;padding:8px 16px;gap:12px}
 .field+.field{border-top:.5px solid var(--hair)}
 .field label{flex:1;font-size:15.5px}
-.field input{background:none;border:0;outline:0;text-align:right;font-size:16.5px;font-weight:500;color:var(--tint);min-width:0;font-variant-numeric:tabular-nums;width:52%}
+.field input{background:none;border:0;outline:0;text-align:right;font-size:16.5px;font-weight:500;color:var(--tint);min-width:0;font-variant-numeric:tabular-nums;width:52%;font-family:var(--mono)}
 .field input::placeholder{color:var(--ter);font-weight:400}
 .field input[type=number]::-webkit-inner-spin-button,.field input[type=number]::-webkit-outer-spin-button{display:none}
 .field select{background:none;border:0;outline:0;color:var(--tint);font-size:16px;font-weight:600;text-align:right;max-width:55%;-webkit-appearance:none;appearance:none}
 .stepper{display:flex;align-items:center;background:rgba(255,255,255,.09);border-radius:12px;overflow:hidden;flex:0 0 auto;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
 .stepper button{width:38px;height:32px;border:0;background:none;font-size:19px;color:var(--tint);font-weight:500}
-.stepper .num{min-width:36px;text-align:center;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}
+.stepper .num{min-width:36px;text-align:center;font-size:15px;font-weight:600}
 .dotrow{display:flex;gap:12px;padding:14px 16px}
 .cdot{width:30px;height:30px;border-radius:99px;border:0;position:relative}
 .cdot.on::after{content:'';position:absolute;inset:-5px;border-radius:99px;border:2px solid var(--label)}
@@ -217,7 +240,7 @@ h1.lt{font-size:36px;font-weight:800;letter-spacing:-.9px;margin:14px 0 2px;padd
 .pl-brand{font-weight:800;font-size:15px;letter-spacing:.02em;text-shadow:0 1px 3px rgba(0,0,0,.28)}
 .pl-kind{font-size:10px;opacity:.78;letter-spacing:.14em;text-transform:uppercase}
 .pl-mid{display:flex;gap:10px;align-items:center}
-.pl-num{font-size:14.5px;letter-spacing:.24em;opacity:.88;font-variant-numeric:tabular-nums}
+.pl-num{font-size:14.5px;letter-spacing:.24em;opacity:.88}
 .pl-bot{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
 .pl-name{font-weight:700;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pl-sub{font-size:11px;opacity:.78;margin-top:1px}
@@ -254,7 +277,7 @@ h1.lt{font-size:36px;font-weight:800;letter-spacing:-.9px;margin:14px 0 2px;padd
   box-shadow:inset 0 1.5px 0 rgba(255,255,255,.16),0 10px 26px rgba(0,0,0,.42);
 }
 .tab{border-radius:26px;padding:6px 13px;display:flex;flex-direction:column;align-items:center;gap:2.5px;color:var(--sec);
-  font-size:9.5px;font-weight:600;background:none;border:0;position:relative;min-width:76px;letter-spacing:.01em;transition:background .2s,color .2s}
+  font-size:9.5px;font-weight:600;background:none;border:0;position:relative;min-width:76px;letter-spacing:.02em;transition:background .2s,color .2s}
 .tab .f{display:none}
 .tab.on{color:var(--tint);background:rgba(46,229,154,.15);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
 .tab.on .f{display:block}
@@ -268,10 +291,17 @@ h1.lt{font-size:36px;font-weight:800;letter-spacing:-.9px;margin:14px 0 2px;padd
   box-shadow:0 0 0 .5px rgba(255,255,255,.22),inset 0 2px 0 rgba(255,255,255,.38),0 10px 24px rgba(46,229,154,.30)}
 #fab:active{transform:scale(.90)}
 
-/* ============ Push ============ */
+/* ============ Push: opaco + aurora própria (bug de sobreposição corrigido) ============ */
 #stack{position:absolute;inset:0;z-index:100;pointer-events:none}
 .push{position:absolute;inset:0;background:var(--bg);transform:translateX(100%);transition:transform .42s cubic-bezier(.32,.72,0,1);pointer-events:auto;display:flex;flex-direction:column}
 .push.in{transform:translateX(0)}
+.push::before{content:'';position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(44% 40% at 16% 10%, rgba(46,229,154,.15), transparent 62%),
+  radial-gradient(50% 44% at 86% 6%, rgba(127,169,255,.12), transparent 64%),
+  radial-gradient(54% 46% at 72% 92%, rgba(46,229,154,.09), transparent 66%),
+  radial-gradient(42% 38% at 8% 88%, rgba(84,140,210,.08), transparent 60%),
+  repeating-linear-gradient(0deg,rgba(255,255,255,.02) 0 1px,transparent 1px 44px),
+  repeating-linear-gradient(90deg,rgba(255,255,255,.02) 0 1px,transparent 1px 44px)}
 .push .navbar{position:relative;flex:0 0 auto;background:rgba(8,11,16,.94);box-shadow:0 .5px 0 var(--hair);padding-left:4px;transform:none}
 .push .navbar .nb-t{opacity:1}
 .push .scroll{position:relative;flex:1;padding-top:4px}
@@ -420,12 +450,12 @@ h1.lt{font-size:36px;font-weight:800;letter-spacing:-.9px;margin:14px 0 2px;padd
 <script>
 'use strict';
 /* =====================================================================
-   CARTEIRA v1.4 — PWA offline, otimizado para desempenho no iOS
+   CARTEIRA v1.5 — PWA offline · AURORA HUD
    Tudo local: estado em localStorage, sem nenhuma requisição de rede.
-   Otimizações: zero backdrop-filter (vidro flat pré-computado),
-   sprite de ícones <use>, navbar via IntersectionObserver,
-   content-visibility nas listas, animações só em transform/opacity
-   e gráficos animados apenas na primeira exibição.
+   Otimizações mantidas: zero backdrop-filter, sprite de ícones <use>,
+   navbar via IntersectionObserver, content-visibility nas listas,
+   gráficos animados apenas na primeira exibição, push opaco com
+   aurora própria (sem sobreposição).
 ===================================================================== */
 
 /* ---------- utilidades ---------- */
@@ -652,7 +682,7 @@ function cardUsage(card){
 }
 function pillFor(st){
   return st==='paid'?{cls:'tint',txt:'Paga'}
-    : st==='current'?{cls:'tint',txt:'Atual'}
+    : st==='current'?{cls:'tint',txt:'<span class="pdot"></span>Atual'}
     : st==='future'?{cls:'gr',txt:'Prevista'}
     : st==='closed'?{cls:'amb',txt:'Em aberto'}
     : st==='overdue'?{cls:'red',txt:'Vencida'}
@@ -713,7 +743,7 @@ function activityFeed(limit=6){
     const c=cardById(e.cardId);
     acts.push({date:e.date,kind:'exp',card:c,title:e.desc,sub:(e.n>1?e.n+'× parcelado':'à vista')+(c?' • '+esc(c.name):''),amount:e.total});
   });
-    S.cards.forEach(c=>{
+  S.cards.forEach(c=>{
     Object.entries(S.invPay[c.id]||{}).forEach(([key,pays])=>{
       pays.forEach(p=>acts.push({date:p.date,kind:'pay',card:c,title:'Fatura '+MONTHS[+key.slice(5)-1],sub:esc(c.name),amount:p.amount}));
     });
@@ -758,11 +788,11 @@ function updateBadges(){
 function bindNavbar(sc,nv){
   if(sc._navBound) return; sc._navBound=true;
   const sent=document.createElement('div');
-  sent.style.cssText='height:1px;pointer-events:none';
+  sent.style.cssText='position:absolute;top:60px;left:0;width:1px;height:1px;pointer-events:none';
   sc.prepend(sent);
   new IntersectionObserver(es=>{
     nv.classList.toggle('lif',!es[0].isIntersecting);
-  },{root:sc,rootMargin:'-56px 0px 0px 0px'}).observe(sent);
+  },{root:sc}).observe(sent);
 }
 function pushScreen(navTitle,backLabel,rightHtml){
   const el=document.createElement('div'); el.className='push';
@@ -845,14 +875,13 @@ function closeSheet(){
 }
 
 /* ---------- gráficos SVG ---------- */
-/* anima via dashoffset (mais barato que dasharray) e APENAS na 1ª exibição */
 function svgDonut(parts,size,sw){
   const R=(size-sw)/2, C=2*Math.PI*R, total=parts.reduce((s,p)=>s+p.val,0);
   let segs='', off=0;
   if(total>0) parts.forEach(p=>{
     const len=p.val/total*C;
     if(len<=0.01) return;
-    segs+=`<circle class="seg" data-final="${len.toFixed(2)}" data-c="${C.toFixed(2)}" cx="${size/2}" cy="${size/2}" r="${R}" fill="none" stroke="${p.color}" stroke-width="${sw}" stroke-dasharray="${len.toFixed(2)} ${C.toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 ${size/2} ${size/2})"/>`;
+    segs+=`<circle class="seg" data-c="${C.toFixed(2)}" cx="${size/2}" cy="${size/2}" r="${R}" fill="none" stroke="${p.color}" stroke-width="${sw}" stroke-dasharray="${len.toFixed(2)} ${C.toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 ${size/2} ${size/2})"/>`;
     off+=len;
   });
   return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" class="donut">
@@ -862,15 +891,20 @@ function svgRing(pct,size,sw,color){
   const R=(size-sw)/2, C=2*Math.PI*R, len=Math.max(0,Math.min(1,pct))*C;
   return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" class="donut">
     <circle cx="${size/2}" cy="${size/2}" r="${R}" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="${sw}"/>
-    <circle class="seg" data-final="${len.toFixed(2)}" data-c="${C.toFixed(2)}" cx="${size/2}" cy="${size/2}" r="${R}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${len.toFixed(2)} ${C.toFixed(2)}" transform="rotate(-90 ${size/2} ${size/2})"/></svg>`;
+    <circle class="seg" data-c="${C.toFixed(2)}" cx="${size/2}" cy="${size/2}" r="${R}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${len.toFixed(2)} ${C.toFixed(2)}" transform="rotate(-90 ${size/2} ${size/2})"/></svg>`;
 }
+/* anima via dashoffset, apenas na 1ª exibição da página */
 function animateCharts(pg){
   const segs=pg.querySelectorAll('.seg');
-  if(pg._charted){ segs.forEach(el=>{ el.style.strokeDashoffset=el.getAttribute('stroke-dashoffset'); }); return; }
+  if(!segs.length) return;
+  if(pg._charted){
+    segs.forEach(el=>{ const f=el.getAttribute('stroke-dashoffset'); if(f!=null) el.style.strokeDashoffset=f; });
+    return;
+  }
   pg._charted=true;
   segs.forEach(el=>{ el.style.strokeDashoffset=el.dataset.c; });
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    segs.forEach(el=>{ el.style.strokeDashoffset=el.getAttribute('stroke-dashoffset'); });
+    segs.forEach(el=>{ const f=el.getAttribute('stroke-dashoffset'); el.style.strokeDashoffset=(f==null?'':f); });
   }));
 }
 
@@ -920,6 +954,7 @@ function renderHomeInto(pg){
           <div class="s">${parts.join(' • ')||'nenhum vencimento este mês'}</div>
         </div>
         <div class="donut-wrap">
+          <svg class="orbit" width="124" height="124" viewBox="0 0 124 124"><circle cx="62" cy="62" r="59" fill="none" stroke="rgba(46,229,154,.3)" stroke-width="1" stroke-dasharray="1.5 7"/></svg>
           ${svgDonut([{val:mc.finV,color:'#2EE59A'},{val:mc.cardV,color:'#7FA9FF'}],104,13)}
           <div class="donut-c"><div class="n">${fmtV(mc.total)}</div><div class="l">total</div></div>
         </div>
@@ -930,7 +965,7 @@ function renderHomeInto(pg){
       </div>
       ${first?`<div class="row press" style="margin:6px -16px -18px;border-top:.5px solid var(--hair)" ${first.act==='inst'?`data-act="inst" data-n="${first.n}"`:first.act==='card'?`data-act="card" data-id="${first.id}"`:`data-act="invoice" data-id="${first.id}" data-key="${first.key}"`}>
         <div class="avt tint">${icon('cal',19)}</div>
-        <div class="grow"><div class="s">Próximo vencimento</div><div class="t">${esc(first.title)}</div></div>
+        <div class="grow"><div class="s" style="display:flex;align-items:center;gap:7px"><span class="pulse"></span>Próximo vencimento</div><div class="t">${esc(first.title)}</div></div>
         <div class="val sm">${fmtV(first.val)}</div>
       </div>`:''}
     </div>
@@ -969,7 +1004,7 @@ function homeFinCard(fs,c){
         <div class="s">${esc(c.bank.split(' ')[0])} • ${fs.paid}/${fs.count} parcelas</div>
         <div style="margin-top:10px">
           <div class="s">Restam</div>
-          <div style="font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.4px">${fmtV(fs.openRest)}</div>
+          <div style="font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;font-family:var(--mono);letter-spacing:-.3px">${fmtV(fs.openRest)}</div>
         </div>
       </div>
     </div>
@@ -1288,7 +1323,7 @@ function renderSettingsInto(pg){
     </div>
     <div class="sec-h">Sobre</div>
     <div class="card">
-      <div class="kv"><span class="k">Carteira</span><span class="v">versão 1.4 · performance</span></div>
+      <div class="kv"><span class="k">Carteira</span><span class="v">versão 1.5 · aurora HUD</span></div>
       <div class="kv"><span class="k">Armazenamento</span><span class="v">somente neste aparelho (offline)</span></div>
     </div>
     <p class="foot">Nada é enviado à internet — exporte backups com frequência</p>`;
@@ -1917,6 +1952,16 @@ setupPWA();
 updateEyeBtn();
 switchTab('home');
 updateBadges();
+</script>
+
+<!-- vigia: se o app não carregar em 4s, mostra aviso em vez de tela preta -->
+<script>
+setTimeout(function(){
+  var pg=document.getElementById('page-home');
+  if(!pg||!pg.firstChild){
+    document.body.insertAdjacentHTML('beforeend','<div style="position:fixed;inset:0;z-index:999;background:#05060A;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#9BA1AC;font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:40px;text-align:center"><p style="color:#F5F6F8;font-size:18px;font-weight:700">Não foi possível carregar a Carteira</p><p style="font-size:14px;line-height:1.5">Seus dados estão salvos.<br>Feche e reabra o app.<br>Se persistir, volte para a versão anterior do arquivo.</p></div>');
+  }
+},4000);
 </script>
 </body>
 </html>
